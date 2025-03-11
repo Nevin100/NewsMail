@@ -6,7 +6,7 @@ const Footer = () => {
           <p className="text-base md:text-lg lg:text-xl">
             tensor Boy &apos; website{" "}
             <a
-              href="https://jaipur.manipal.edu/"
+              href="#"
               className="text-white hover:text-amber-600"
               target="_blank"
               rel="noopener noreferrer"
@@ -15,7 +15,7 @@ const Footer = () => {
             </a>{" "}
             and{" "}
             <a
-              href="https://www.geekroom.in/"
+              href="#"
               className="text-white hover:text-amber-600"
               target="_blank"
               rel="noopener noreferrer"
@@ -33,7 +33,7 @@ const Footer = () => {
           <ul className="list-none space-y-3">
             <li>
               <a
-                href="https://linktr.ee/geekroom"
+                href="#"
                 className="text-base md:text-lg lg:text-xl transition-colors duration-200 ease-in-out text-[#210F09]hover:text-pink-400"
               >
                 Useful Link 1
@@ -41,7 +41,7 @@ const Footer = () => {
             </li>
             <li>
               <a
-                href="https://codemanipal.devfolio.co/"
+                href="#"
                 className="text-base md:text-lg lg:text-xl transition-colors duration-200 ease-in-out  hover:text-pink-400"
               >
                 Useful Link 2
@@ -74,7 +74,7 @@ const Footer = () => {
               </span>
             </a>
             <a
-              href="https://x.com/geek__room_"
+              href="#"
               aria-label="Twitter"
               target="_blank"
               rel="noopener noreferrer"
@@ -90,10 +90,7 @@ const Footer = () => {
                 ></i>
               </span>
             </a>
-            <a
-              href="https://www.instagram.com/_geek.room/"
-              aria-label="Instagram"
-            >
+            <a href="#" aria-label="Instagram">
               <span className="flex items-center justify-center p-3 transition duration-200 ease-in-out transform hover:scale-110 hover:text-pink-400">
                 <i
                   className="fa-brands fa-instagram"
@@ -106,7 +103,7 @@ const Footer = () => {
               </span>
             </a>
             <a
-              href="https://www.linkedin.com/company/code-kshetra/"
+              href="#"
               aria-label="LinkedIn"
               target="_blank"
               rel="noopener noreferrer"
