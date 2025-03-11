@@ -1,14 +1,36 @@
 import { useState } from "react";
 import NewsLetterImage from "../Components/NewsLetterImage.jsx";
 import { Mail } from "lucide-react";
+import { useAddMailMutation } from "../Redux/Features/Mail.js";
+import Swal from "sweetalert2";
 
 const NewsLetterPage = () => {
   const [formData, setFormData] = useState({
     email: "",
   });
 
+  const [addMail] = useAddMailMutation();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email.trim()) return;
+
+    try {
+      await addMail({ mail: formData.email }).unwrap();
+      setFormData({ email: "" });
+      Swal.fire({
+        title: "Mail Submitted!",
+        icon: "success",
+        draggable: true,
+      });
+    } catch (error) {
+      console.error("Failed to subscribe:", error);
+      Swal.fire({
+        title: "Something went wrong!",
+        icon: "error",
+        draggable: true,
+      });
+    }
   };
 
   return (
