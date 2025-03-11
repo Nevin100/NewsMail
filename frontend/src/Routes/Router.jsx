@@ -5,6 +5,7 @@ import GoalsExtensionPage from "../Pages/GoalsExtensionPage.jsx";
 import LifeCookbook from "../Pages/LifeCookbook.jsx";
 import NewsLetterPage from "../Pages/NewsLetterPage.jsx";
 import RedPillPage from "../Pages/RedPillPage.jsx";
+import Settings from "../Pages/Settings.jsx";
 import StatisticsPage from "../Pages/StatisticsPage.jsx";
 import App from "../App.jsx";
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "/StatisticsPage",
         element: <StatisticsPage />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
       },
     ],
   },

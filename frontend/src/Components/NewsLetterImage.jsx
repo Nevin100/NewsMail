@@ -1,4 +1,4 @@
-const NewsLetterImage = ({ title, subtitle }) => {
+const NewsLetterImage = ({ title }) => {
   return (
     <div className="hidden lg:flex items-center justify-center bg-base-200 p-2">
       <div className="max-w-md text-center">
@@ -13,7 +13,6 @@ const NewsLetterImage = ({ title, subtitle }) => {
           ))}
         </div>
         <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        <p className="text-base-content/60">{subtitle}</p>
       </div>
     </div>
   );

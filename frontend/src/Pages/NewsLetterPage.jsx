@@ -56,12 +56,7 @@ const NewsLetterPage = () => {
         </div>
       </div>
 
-      <NewsLetterImage
-        title={"Get AI tips and plug-and-play code—drop your email!"}
-        subtitle={
-          "Get an email summary of the latest breakthrough news, models, research, and repos and much more.."
-        }
-      />
+      <NewsLetterImage title={"Get AI tips, Just drop your email!"} />
     </div>
   );
 };
