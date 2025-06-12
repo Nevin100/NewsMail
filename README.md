@@ -42,6 +42,8 @@ This project is currently in active development and aims to be production-ready 
 | **Express.js** | Backend API & routes            |
 | **React.js**   | Frontend user interface         |
 | **Node.js**    | Backend runtime                 |
+| **Reduxjs**    | For better state Management     |
+| **RTK-Toolkit**| For Setting Mutations           |
 | **Nodemailer** | Email transport service         🚧|
 | **BullMailer** | Background job queues           🚧|
 | **Gemini API** | AI-generated newsletter content 🚧|
