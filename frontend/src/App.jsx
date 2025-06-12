@@ -9,7 +9,7 @@ function App() {
   return (
     <div data-theme={theme}>
       <Navbar />
-      <main className="min-h-screen max-w-screen-2xl mx-auto px-4 py-6 font-Montesarrat  ">
+      <main className="min-h-screen max-w-14xl mx-auto px-4 py-6 font-Montesarrat  ">
         <Outlet />
       </main>
       <Footer />
