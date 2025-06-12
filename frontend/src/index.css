@@ -5,3 +5,7 @@
 @plugin "daisyui" {
   themes: all;
 }
+
+body{
+  overflow-x: hidden;
+}

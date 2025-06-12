@@ -40,7 +40,7 @@ const NewsLetterPage = () => {
           <div className="w-full max-w-md space-y-8">
             <div className="text-center mb-8">
               <div className="flex flex-col items-center gap-2 group">
-                <h1 className="text-3xl font-bold mt-4">TensorBoy</h1>
+                <h1 className="text-3xl font-bold mt-4">@NewsMail</h1>
                 <h2 className=" text-xl text-base-content/60 mt-4">
                   Get AI tips and drop your email!
                 </h2>
