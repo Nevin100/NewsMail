@@ -11,25 +11,18 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      { path: "/", element: <NewsLetterPage /> },
+      { path: "/settings", element: <Settings /> },
+      { path: "/admin", element: <AdminLogin /> },
+
       {
-        path: "/",
-        element: <NewsLetterPage />,
-      },
-      {
-        path: "/settings",
-        element: <Settings />,
-      },
-      {
-        path: "/admin",
-        element: <AdminLogin />,
-      },
-      {
-        path: "/admin-dashboard",
-        element: (
-          <ProtectedRoute>
-            <AdminDashboard />
-          </ProtectedRoute>
-        ),
+        element: <ProtectedRoute />, // 👈 now this is a wrapper
+        children: [
+          {
+            path: "/admin-dashboard",
+            element: <AdminDashboard />, // 👈 this now renders inside Outlet
+          },
+        ],
       },
     ],
   },

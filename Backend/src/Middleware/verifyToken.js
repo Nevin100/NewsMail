@@ -6,7 +6,9 @@ const verifyToken = async (req, res, next) => {
     const token = req.cookies.jwt;
 
     if (!token) {
-      res.status(403).json({ message: "No Token Reccieved ", error: true });
+      return res
+        .status(403)
+        .json({ message: "No Token Reccieved ", error: true });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -30,7 +32,7 @@ const verifyToken = async (req, res, next) => {
     console.log(error);
     res
       .status(500)
-      .status({ message: "Internal Server Middleware Issue", error: true });
+      .json({ message: "Internal Server Middleware Issue", error: true });
   }
 };
 
