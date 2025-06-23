@@ -3,6 +3,7 @@ import NewsLetterImage from "../Components/NewsLetterImage.jsx";
 import { Mail } from "lucide-react";
 import { useAddMailMutation } from "../Redux/Features/Mail.js";
 import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
 
 const NewsLetterPage = () => {
   const [formData, setFormData] = useState({
@@ -18,18 +19,17 @@ const NewsLetterPage = () => {
     try {
       await addMail({ mail: formData.email }).unwrap();
       setFormData({ email: "" });
-      Swal.fire({
-        title: "Mail Submitted!",
-        icon: "success",
-        draggable: true,
-      });
+      toast.success("Successfully Submitted");
     } catch (error) {
       console.error("Failed to subscribe:", error);
-      Swal.fire({
-        title: "Something went wrong!",
-        icon: "error",
-        draggable: true,
-      });
+
+      if (error?.status === 409) {
+        toast.error("Email already subscribed.");
+      } else if (error?.data?.message) {
+        toast.error(error.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again later.");
+      }
     }
   };
 

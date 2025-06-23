@@ -20,7 +20,7 @@ app.use(
 app.use(cookieParser());
 
 //Routes :
-app.use("/tensorBoy", MailRoute);
+app.use("/news-mail", MailRoute);
 
 //Server
 app.listen(process.env.PORT || PORT, () => {
