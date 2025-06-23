@@ -4,6 +4,7 @@ import cors from "cors";
 import MailRoute from "./Routes/mail.Route.js";
 import ConnectDB from "./Lib/db.js";
 import cookieParser from "cookie-parser";
+import AdminRoutes from "./Routes/admin.routes.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 //Routes :
 app.use("/news-mail", MailRoute);
+app.use("/admin", AdminRoutes);
 
 //Server
 app.listen(process.env.PORT || PORT, () => {
