@@ -3,6 +3,7 @@ import {
   adminLogin,
   AdminLogout,
   deleteMail,
+  DeleteMails,
   GetMails,
 } from "../Controller/admin.controller.js";
 import verifyToken from "../Middleware/verifyToken.js";
@@ -18,6 +19,9 @@ router.get("/get-mails", GetMails);
 
 //Mails Delete :
 router.delete(`/delete-mail/:id`, deleteMail);
+
+//All Mails deleted :
+router.delete(`/delete-mails`, DeleteMails);
 
 router.get("/verify-token", verifyToken, (req, res) => {
   res.status(200).json({ message: "Token valid", admin: req.admin });

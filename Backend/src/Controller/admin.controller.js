@@ -89,6 +89,22 @@ export const deleteMail = async (req, res) => {
   }
 };
 
+export const DeleteMails = async (req, res) => {
+  try {
+    const deletedMails = await Mail.deleteMany();
+    if (!deletedMails) {
+      return res.status(403).json({ message: "No Mails found", error: true });
+    }
+
+    res
+      .status(200)
+      .json({ message: "All Mails deleted Successfully", error: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Inbternal Server Issue", error: true });
+  }
+};
+
 export const AdminLogout = (req, res) => {
   try {
     res.clearCookie("jwt", {

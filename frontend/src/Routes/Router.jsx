@@ -5,6 +5,9 @@ import Settings from "../Pages/Settings.jsx";
 import ProtectedRoute from "../Context/Protectedroute.jsx";
 import AdminDashboard from "../Components/Admin/AdminDashboard.jsx";
 import AdminLogin from "../Components/Admin/AdminLogin.jsx";
+import About from "../Components/Admin/About.jsx";
+import CreateMail from "../Components/Admin/CreateMail.jsx";
+import SendMail from "../Components/Admin/SendMail.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,10 +21,10 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />, // 👈 now this is a wrapper
         children: [
-          {
-            path: "/admin-dashboard",
-            element: <AdminDashboard />, // 👈 this now renders inside Outlet
-          },
+          { path: "/admin-dashboard", element: <AdminDashboard /> },
+          { path: "/admin/about", element: <About /> },
+          { path: "/admin/create-mail", element: <CreateMail /> },
+          { path: "/admin/send-mail", element: <SendMail /> },
         ],
       },
     ],
