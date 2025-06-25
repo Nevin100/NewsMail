@@ -1,8 +1,6 @@
 import Admin from "../Model/admin.model.js";
 import generateToken from "../Lib/generateToken.js";
 import Mail from "../Model/mail.model.js";
-import scrapeTechNews from "../Lib/scrape.js";
-import generateNewsletterHTML from "../Lib/generateNewsletter.js";
 
 export const adminLogin = async (req, res) => {
   try {
