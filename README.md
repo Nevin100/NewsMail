@@ -1,4 +1,4 @@
-# 📰 @Newsmail
+# 📰 @Newsmail - Web Scraping + NodeMailer 😎
 
 > **🚧 UNDER Development 🚧**  
 > _A powerful MERN stack-based Newsletter Platform – sleek, scalable, and soon AI-powered._
