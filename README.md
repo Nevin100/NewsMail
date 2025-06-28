@@ -16,8 +16,7 @@ This project is currently in active development and aims to be production-ready 
 ## 🔧 Current Features
 
 - ✅ Functional **Newsletter Landing Page**  
-- ✅ Integrated **POST API** to collect emails into the backend  
-- ✅ Styled with **TailwindCSS** and **DaisyUI (32+ themes)**    
+- ✅ Styled with **TailwindCSS** and **DaisyUI (34+ themes)**    
 - ✅ Backend architecture connected to **MongoDB**
 - ✅ **Gemini API** integration for AI-generated HTML News-Letter Format  
 - ✅ **Excel ( excel.js )** for Admin side parsing data
