@@ -19,17 +19,16 @@ This project is currently in active development and aims to be production-ready 
 - ✅ Integrated **POST API** to collect emails into the backend  
 - ✅ Styled with **TailwindCSS** and **DaisyUI (32+ themes)**    
 - ✅ Backend architecture connected to **MongoDB**
-
----
-
+- ✅ **Gemini API** integration for AI-generated HTML News-Letter Format  
+- ✅ **Excel ( excel.js )** for Admin side parsing data
+- ✅ Authentication for Admin Access
+- ✅ Fully functional **Admin Dashboard** to manage campaigns   
+- ✅ Advanced NodeMailer service setup and tested 
+- ✅ Cheerio + Axios for Web Scraping legal websites for NewsLetter
+  
 ## 🛠️ Upcoming Features
 
-- [ ] Advanced **Nodemailer + BullMailer** queue for batch mailing  
-- [ ] Fully functional **Admin Dashboard** to manage campaigns  
-- [ ] **Excel (.xlsx)** upload & parsing for bulk mail lists  
-- [ ] **Gemini API** integration for AI-generated content  
 - [ ] Analytics for open rates, clicks, and bounces  
-- [ ] Authentication for Admin Access  
 - [ ] Deployment on Vercel & Render (or any cloud of choice)
 
 ---
@@ -44,11 +43,11 @@ This project is currently in active development and aims to be production-ready 
 | **Node.js**    | Backend runtime                 |
 | **Reduxjs**    | For better state Management     |
 | **RTK-Toolkit**| For Setting Mutations           |
-| **Nodemailer** | Email transport service         🚧|
+| **Nodemailer** | Email transport service         |
 | **BullMailer** | Background job queues           🚧|
-| **Gemini API** | AI-generated newsletter content 🚧|
+| **Gemini API** | AI-generated newsletter content |
 | **DaisyUI**    | Sleek component styling         |
-| **XLSX**       | Excel sheet parsing             |
+| **Exceljs**    | Excel sheet parsing             |
 
 ---
 
