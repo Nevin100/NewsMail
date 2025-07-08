@@ -2,6 +2,7 @@
 import express from "express";
 import scrapeTechNews from "../Lib/scrape.js";
 import Article from "../Model/article.model.js";
+import NewsLetter from "../Model/newsLetter.model.js";
 
 const router = express.Router();
 
@@ -33,4 +34,42 @@ router.post("/scrape", async (req, res) => {
   }
 });
 
+router.get("/total-articles", async (req, res) => {
+  try {
+    const articles = await Article.find();
+    if (!articles) {
+      return res
+        .status(400)
+        .json({ message: "No Articles found", error: true });
+    }
+    res
+      .status(200)
+      .json({ message: "Articles recieved", data: articles, error: false });
+  } catch (error) {
+    console.error("Error Occured:", err.message);
+    res.status(500).json({ error: true, message: "internal Server Issue" });
+  }
+});
+
+// newsletter :
+router.get("/total-newsletter-formats", async (req, res) => {
+  try {
+    const newsLetters = await NewsLetter.find();
+    if (!newsLetters) {
+      return res
+        .status(400)
+        .json({ message: "No NewsLetters found", error: true });
+    }
+    res
+      .status(200)
+      .json({
+        message: "Newsletters recieved",
+        data: newsLetters,
+        error: false,
+      });
+  } catch (error) {
+    console.error("Error Occured:", error.message);
+    res.status(500).json({ error: true, message: "internal Server Issue" });
+  }
+});
 export default router;

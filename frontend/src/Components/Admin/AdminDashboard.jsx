@@ -13,19 +13,22 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  PieChart,
+  Pie,
   ResponsiveContainer,
 } from "recharts";
 import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
   const [emails, setEmails] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [NewsLetters, setNewsLetters] = useState([]);
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
   const [totalSignups, setTotalSignups] = useState(0);
-  const [views, setViews] = useState(0);
   const [activeTab, setActiveTab] = useState("About");
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -44,8 +47,30 @@ const AdminDashboard = () => {
       }
     };
 
+    const fetchArticles = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/articles/total-articles"
+        );
+        setArticles(res.data.data.length);
+      } catch (err) {
+        console.error("Error fetching mails:", err);
+      }
+    };
+    const fetchNewsLetters = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/articles/total-newsletter-formats"
+        );
+        setNewsLetters(res.data.data.length);
+      } catch (err) {
+        console.error("Error fetching mails:", err);
+      }
+    };
+
     fetchData();
-    setViews(127);
+    fetchArticles();
+    fetchNewsLetters();
   }, []);
 
   const handleLogout = async () => {
@@ -170,12 +195,27 @@ const AdminDashboard = () => {
     users,
   }));
 
+  const SidebarItem = ({ icon, label, route }) => {
+    const isActive = window.location.pathname.includes(route);
+    return (
+      <button
+        onClick={() => navigate(route)}
+        className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
+          isActive ? "bg-white shadow" : " hover:bg-base-100"
+        }`}
+      >
+        {icon}
+        <span className="text-lg">{label}</span>
+      </button>
+    );
+  };
+
   return (
     <div className="p-4 md:p-6 mt-14 min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
-        <div className="lg:col-span-1">
-          {/* Hamburger Toggle */}
+        <div className="lg:cols-span-1">
+          {/* 🍔 Mobile Toggle */}
           <div className="lg:hidden flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold">Menu</h3>
             <button
@@ -185,11 +225,11 @@ const AdminDashboard = () => {
               ☰
             </button>
           </div>
-
+          {/* 📱 Mobile Sidebar */}
           <div
             className={`${
               showSidebar ? "block" : "hidden"
-            } lg:block bg-base-200 p-6 rounded-xl`}
+            } lg:hidden bg-base-200 p-6 rounded-xl`}
           >
             <div className="flex flex-col items-center mb-6">
               <img
@@ -219,7 +259,7 @@ const AdminDashboard = () => {
                     window.location.pathname.includes(
                       tab.toLowerCase().replace(" ", "-")
                     )
-                      ? "bg-base-100 "
+                      ? "bg-base-100"
                       : "hover:bg-base-300 hover:text-white-100"
                   }`}
                 >
@@ -234,37 +274,252 @@ const AdminDashboard = () => {
             >
               Logout
             </button>
+          </div>
+          {/* 💻 Desktop Sidebar */}
+          <aside className="hidden lg:flex flex-col bg-base-300 rounded-xl py-8 px-6 shadow-md h-full min-h-[calc(100vh-8rem)]">
+            {/* Logo */}
+            <div className="mb-10 flex flex-col gap-4 items-center bg-base-200 px-6 py-4 rounded-xl">
+              <img
+                src="/newsMailer.svg"
+                alt="Admin"
+                className="w-24 h-10 object-contain"
+              />
+              <h3 className="text-center text-2xl font-semibold ">Admin</h3>
+            </div>
 
-            {/* Line Chart only on desktop */}
-          </div>
-          <div className="mt-5 hidden lg:block bg-base-200 p-4 rounded-xl shadow-md">
-            <h3 className="font-bold text-center mb-4">User Growth 📈</h3>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="users" stroke="#3b82f6" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+            {/* Menu Items */}
+            <nav className="flex flex-col gap-5">
+              <SidebarItem
+                icon={
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                }
+                label="Dashboard"
+                route="/admin/dashboard"
+              />
+              <SidebarItem
+                icon={
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+                    />
+                  </svg>
+                }
+                label="About"
+                route="/admin/about"
+              />
+              <SidebarItem
+                icon={
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                }
+                label="Create Mail"
+                route="/admin/create-mail"
+              />
+              <SidebarItem
+                icon={<FaEnvelope className="w-6 h-6" />}
+                label="Send Mail"
+                route="/admin/send-mail"
+              />
+            </nav>
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="mt-auto flex items-center gap-3 text-red-500 hover:text-red-700 px-4 py-3 hover:bg-base-100 rounded-xl transition-all duration-200"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span className="text-lg font-semibold">Logout</span>
+            </button>
+          </aside>
         </div>
 
         {/* Right Side */}
         <div className="lg:col-span-3 flex flex-col gap-8">
+          {/* Charts Section on Desktop Only */}
           {/* Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="bg-base-200 shadow-md p-4 lg:p-14 rounded-xl">
-              <h3 className="lg:text-2xl text-xl font-semibold">
-                Total Signups
-              </h3>
-              <p className="lg:text-4xl text-xl mt-2">{totalSignups}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {/* Card 1 */}
+            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
+              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300  rounded-full">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="lg:text-lg text-sm font-semibold">
+                  Total Signups
+                </h3>
+                <p className="lg:text-xl text-sm mt-2">{totalSignups}</p>
+              </div>
             </div>
-            <div className="bg-base-200 shadow-md  p-4 lg:p-14 flex justify-center items-center rounded-xl">
-              <h3 className="lg:text-3xl text-xl font-semibold">
-                2025 All Rights Reserved @Nevin Bali
+
+            {/* Card 2 */}
+            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
+              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300  rounded-full">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="lg:text-sm text-sm font-semibold">
+                  All Rights Reserved
+                </h3>
+                <p className="text-sm lg:text-sm text-muted">
+                  © 2025 Nevin Bali
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
+              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300 rounded-full">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="lg:text-lg text-sm font-semibold">
+                  News Letters
+                </h3>
+                <p className="lg:text-xl text-sm mt-2">{NewsLetters}</p>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
+              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300  rounded-full">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 10h4l3 10 4-18 3 8h4"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h3 className="lg:text-lg text-sm font-semibold">Articles</h3>
+                <p className="lg:text-xl text-sm mt-2">{articles}</p>
+              </div>
+            </div>
+          </div>
+          {/* Charts Container */}
+          <div className="flex flex-col lg:flex-row lg:gap-6 gap-6">
+            {/* Line Chart */}
+            <div className="flex-1 bg-base-200 rounded-xl p-4">
+              <h3 className="font-bold text-xl text-center mb-2">
+                User Growth 📈
               </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="users" stroke="#3b82f6" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Pie Chart */}
+            <div className="flex-1 bg-base-200 rounded-xl p-4">
+              <h3 className="font-bold text-xl text-center mb-2">
+                Signup Distribution 🥧
+              </h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    dataKey="users"
+                    nameKey="date"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#fbbf24"
+                    label
+                  />
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
@@ -285,7 +540,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Search and Filter */}
-          <div className="flex flex-wrap gap-4 items-center justify-between lg:m-7 m-3">
+          <div className="flex flex-wrap gap-4 items-center justify-between lg:m-1 m-3">
             <input
               type="text"
               placeholder="Search email..."
