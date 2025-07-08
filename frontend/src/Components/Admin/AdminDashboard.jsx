@@ -6,6 +6,8 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { FaNewspaper } from "react-icons/fa6";
+
 import {
   LineChart,
   Line,
@@ -201,7 +203,7 @@ const AdminDashboard = () => {
       <button
         onClick={() => navigate(route)}
         className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
-          isActive ? "bg-white shadow" : " hover:bg-base-100"
+          isActive ? "bg-base-200 shadow" : " hover:bg-base-100"
         }`}
       >
         {icon}
@@ -241,17 +243,25 @@ const AdminDashboard = () => {
             </div>
 
             <div className="flex flex-col gap-3 mt-6 text-md">
-              {["Dashboard", "About", "Create Mail", "Send Mail"].map((tab) => (
+              {[
+                "Dashboard",
+                "About",
+                "Articles",
+                "Send Mail",
+                "NewsLetter",
+              ].map((tab) => (
                 <button
                   key={tab}
                   onClick={() =>
                     navigate(
                       tab === "Dashboard"
-                        ? "/admin/dashboard"
+                        ? "/"
                         : tab === "About"
                         ? "/admin/about"
-                        : tab === "Create Mail"
-                        ? "/admin/create-mail"
+                        : tab === "Articles"
+                        ? "/admin/articles"
+                        : tab === "NewsLetter"
+                        ? "/admin/newsletter"
                         : "/admin/send-mail"
                     )
                   }
@@ -306,7 +316,7 @@ const AdminDashboard = () => {
                   </svg>
                 }
                 label="Dashboard"
-                route="/admin/dashboard"
+                route="/"
               />
               <SidebarItem
                 icon={
@@ -343,13 +353,38 @@ const AdminDashboard = () => {
                     />
                   </svg>
                 }
-                label="Create Mail"
-                route="/admin/create-mail"
+                label="Articles"
+                route="/admin/articles"
+              />
+              <SidebarItem
+                icon={
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    />
+                  </svg>
+                }
+                label="NewsLetter"
+                route="/admin/newsLetter"
               />
               <SidebarItem
                 icon={<FaEnvelope className="w-6 h-6" />}
                 label="Send Mail"
                 route="/admin/send-mail"
+              />
+              <SidebarItem
+                icon={<FaNewspaper className="w-6 h-6" />}
+                label="Scrape Website"
+                route="/admin/scrape"
               />
             </nav>
 
@@ -514,7 +549,7 @@ const AdminDashboard = () => {
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
-                    fill="#fbbf24"
+                    fill="#fbbf27"
                     label
                   />
                   <Tooltip />

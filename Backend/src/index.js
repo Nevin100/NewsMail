@@ -72,6 +72,7 @@ app.post("/admin/generate-newsletter", verifyToken, async (req, res) => {
       message: "Generated and saved successfully",
       success: true,
       data: saved,
+      html: lastGeneratedHtml,
     });
   } catch (error) {
     console.error("Error during newsletter generation:", error);
