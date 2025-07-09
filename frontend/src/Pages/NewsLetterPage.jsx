@@ -81,7 +81,7 @@ const NewsLetterPage = () => {
                 className="btn btn-primary w-full"
                 disabled={loading}
               >
-                {loading ? "Subscribing..." : "Sbuscribe"}
+                {loading ? "Subscribing..." : "Subscribe"}
               </button>
             </form>
           </div>
