@@ -9,7 +9,7 @@ const SettingsPage = () => {
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">Theme</h2>
           <p className="text-sm text-base-content/70">
-            Choose a theme for your chat interface
+            Choose a theme for your @NewsMail interface
           </p>
         </div>
 
