@@ -24,7 +24,7 @@ const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://news-mail.vercel.app"],
     credentials: true,
   })
 );
