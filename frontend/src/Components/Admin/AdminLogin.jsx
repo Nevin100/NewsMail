@@ -21,7 +21,10 @@ const AdminLogin = () => {
 
     try {
       // Make API call to login admin
-      await instance.post("/admin/admin-login", formData);
+      await instance.post(
+        "https://newsmail-2s5a.onrender.com/admin/admin-login",
+        formData
+      );
 
       toast.success("Login Successful!");
       navigate("/admin-dashboard");

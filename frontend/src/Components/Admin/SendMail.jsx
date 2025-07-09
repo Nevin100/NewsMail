@@ -22,7 +22,9 @@ const SendMail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/admin/get-mails");
+        const res = await axios.get(
+          "https://newsmail-2s5a.onrender.com/admin/get-mails"
+        );
         const sortedData = res.data.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -54,9 +56,12 @@ const SendMail = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/admin/admin-logout", {
-        withCredentials: true,
-      });
+      await axios.post(
+        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {
@@ -78,7 +83,9 @@ const SendMail = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/admin/delete-mail/${id}`);
+        await axios.delete(
+          `https://newsmail-2s5a.onrender.com/admin/delete-mail/${id}`
+        );
         toast.success("Mail Deleted Successfully");
         const updated = emails.filter((mail) => mail._id !== id);
         setEmails(updated);
@@ -110,7 +117,9 @@ const SendMail = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete("http://localhost:8000/admin/delete-all-mails");
+        await axios.delete(
+          "https://newsmail-2s5a.onrender.com/admin/delete-all-mails"
+        );
         toast.success("All mails deleted successfully");
         setEmails([]);
         setFilteredEmails([]);
@@ -131,7 +140,7 @@ const SendMail = () => {
   const handleSendMail = async (email) => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/admin/send-newsletter",
+        "https://newsmail-2s5a.onrender.com/admin/send-newsletter",
         {
           to: email,
           subject: "NewsMailer Newsletter 📰",
@@ -164,7 +173,7 @@ const SendMail = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/admin/send-newsletter",
+        "https://newsmail-2s5a.onrender.com/admin/send-newsletter",
         {
           bcc: selectedEmails,
           subject: "NewsMailer Newsletter 📰",

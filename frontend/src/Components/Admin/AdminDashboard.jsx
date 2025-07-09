@@ -40,7 +40,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/admin/get-mails");
+        const res = await axios.get(
+          "https://newsmail-2s5a.onrender.com/admin/get-mails"
+        );
         setEmails(res.data.data);
         setFilteredEmails(res.data.data);
         setTotalSignups(res.data.data.length);
@@ -52,7 +54,7 @@ const AdminDashboard = () => {
     const fetchArticles = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/articles/total-articles"
+          "https://newsmail-2s5a.onrender.com/total-articles"
         );
         setArticles(res.data.data.length);
       } catch (err) {
@@ -62,7 +64,7 @@ const AdminDashboard = () => {
     const fetchNewsLetters = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/articles/total-newsletter-formats"
+          "https://newsmail-2s5a.onrender.com/articles/total-newsletter-formats"
         );
         setNewsLetters(res.data.data.length);
       } catch (err) {
@@ -77,9 +79,12 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/admin/admin-logout", {
-        withCredentials: true,
-      });
+      await axios.post(
+        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {
@@ -90,7 +95,9 @@ const AdminDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/delete-mail/${id}`);
+      await axios.delete(
+        `https://newsmail-2s5a.onrender.com/admin/delete-mail/${id}`
+      );
       toast.success("Mail Deleted Successfully");
       const updated = emails.filter((mail) => mail._id !== id);
       setEmails(updated);
@@ -163,7 +170,9 @@ const AdminDashboard = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete("http://localhost:8000/admin/delete-all-mails");
+        await axios.delete(
+          "https://newsmail-2s5a.onrender.com/admin/delete-all-mails"
+        );
         toast.success("All mails deleted successfully");
         setEmails([]);
         setFilteredEmails([]);

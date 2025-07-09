@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `http://localhost:8000/news-mail`,
+  baseUrl: `https://newsmail-2s5a.onrender.com/news-mail`,
   credentials: "include",
 });
 

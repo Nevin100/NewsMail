@@ -9,7 +9,9 @@ const Protectedroute = () => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const response = await instance.get("/admin/verify-token");
+        const response = await instance.get(
+          "https://newsmail-2s5a.onrender.com/admin/verify-token"
+        );
         setIsAuth(true);
       } catch (error) {
         console.log(error);

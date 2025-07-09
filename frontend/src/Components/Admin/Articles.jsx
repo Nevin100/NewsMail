@@ -14,7 +14,7 @@ const Articles = () => {
     const fetchArticles = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/articles/total-articles"
+          "https://newsmail-2s5a.onrender.com/articles/total-articles"
         );
         setArticles(res.data.data);
       } catch (err) {
@@ -26,9 +26,12 @@ const Articles = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/admin/admin-logout", {
-        withCredentials: true,
-      });
+      await axios.post(
+        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {

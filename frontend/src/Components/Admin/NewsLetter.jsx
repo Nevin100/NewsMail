@@ -15,7 +15,7 @@ const NewsLetter = () => {
     const fetchArticles = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/articles/total-newsletter-formats"
+          "https://newsmail-2s5a.onrender.com/articles/total-newsletter-formats"
         );
         setNewsLetters(res.data.data);
         console.log("Response : html", newsLetters);
@@ -29,9 +29,12 @@ const NewsLetter = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/admin/admin-logout", {
-        withCredentials: true,
-      });
+      await axios.post(
+        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {

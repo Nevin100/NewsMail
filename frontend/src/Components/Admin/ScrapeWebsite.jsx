@@ -15,9 +15,12 @@ const ScrapWebsite = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:8000/admin/admin-logout", {
-        withCredentials: true,
-      });
+      await axios.post(
+        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+        {
+          withCredentials: true,
+        }
+      );
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {
@@ -44,9 +47,12 @@ const ScrapWebsite = () => {
   const handleScrape = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/articles/scrape", {
-        url,
-      });
+      const res = await axios.post(
+        "https://newsmail-2s5a.onrender.com/articles/scrape",
+        {
+          url,
+        }
+      );
       setArticles(res.data.data || []);
     } catch (err) {
       console.error("Scrape failed:", err);
@@ -57,7 +63,7 @@ const ScrapWebsite = () => {
   const handleGenerate = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/admin/generate-newsletter",
+        "https://newsmail-2s5a.onrender.com/admin/generate-newsletter",
         {},
         { withCredentials: true }
       );
