@@ -1,35 +1,33 @@
-# 📰 @Newsmail - Web Scraping + NodeMailer 😎
+# 📰 @Newsmail - Web Scraping + AI + NodeMailer + Admin Dashboard 😎
 
-> **🚧 UNDER Development 🚧**  
-> _A powerful MERN stack-based Newsletter Platform – sleek, scalable, and soon AI-powered._
+> ✅ **COMPLETED & FUNCTIONAL**  
+> _A powerful MERN stack-based Newsletter Platform – AI-powered, admin-controlled, and built for bulk mail efficiency._
 
 ---
+
+## 📷 Live Preview : https://news-mail.vercel.app/
 
 ## ✨ Project Overview
 
-**Newsmail** is a full-stack Newsletter application built using the **MERN** stack (MongoDB, Express, React, Node). Designed with a cool, clean aesthetic powered by **DaisyUI’s 32 sleek themes**, Newsmail offers a seamless way to collect, manage, and send newsletters — with future integration of **AI capabilities** via the **Gemini API**.
+**Newsmail** is a production-ready full-stack Newsletter application built using the **MERN** stack (MongoDB, Express, React, Node). Designed with a clean, modern UI powered by **DaisyUI’s 34 sleek themes**, Newsmail lets users collect emails, manage campaigns, and send personalized newsletters — enhanced with **AI-generated content** via the **Gemini API**.
 
-This project is currently in active development and aims to be production-ready within the next **1.5-*2.0 months**.
+> Now includes a fully functional **Admin Dashboard**, **Bulk Mailer** support and robust **Nodemailer** integration.
 
 ---
 
-## 🔧 Current Features
+## ✅ Key Features
 
-- ✅ Functional **Newsletter Landing Page**  
-- ✅ Styled with **TailwindCSS** and **DaisyUI (34+ themes)**    
-- ✅ Backend architecture connected to **MongoDB**
-- ✅ **Gemini API** integration for AI-generated HTML News-Letter Format  
-- ✅ **Excel ( excel.js )** for Admin side parsing data
-- ✅ Authentication for Admin Access
-- ✅ Fully functional **Admin Dashboard** to manage campaigns   
-- ✅ Advanced NodeMailer service setup and tested 
-- ✅ Cheerio + Axios for Web Scraping legal websites for NewsLetter
-  
-## 🛠️ Upcoming Features
+- 🔹 **Responsive Newsletter Landing Page**
+- 🎨 Styled with **TailwindCSS** + **DaisyUI (34+ themes)**
+- 🧠 **Gemini API** integration for AI-generated HTML newsletter content  
+- 📁 **Excel Parsing** (using `exceljs`) to upload recipient lists
+- 🔐 **Admin Authentication** system
+- 📊 **Admin Dashboard** for creating and managing campaigns
+- ✉️ **Nodemailer** setup for sending rich emails
+- 🧹 **Web Scraping** via Cheerio + Axios for newsletter content sourcing --> currently scrape some websites as it is alpha model***
+- 🚀 **Bulk Mailer**  is working ✅
 
-- [ ] Analytics for open rates, clicks, and bounces  
-- [ ] Deployment on Vercel & Render (or any cloud of choice)
-
+``` This is an alpha model 😄```
 ---
 
 ## 🚀 Tech Stack
@@ -40,51 +38,53 @@ This project is currently in active development and aims to be production-ready 
 | **Express.js** | Backend API & routes            |
 | **React.js**   | Frontend user interface         |
 | **Node.js**    | Backend runtime                 |
-| **Reduxjs**    | For better state Management     |
-| **RTK-Toolkit**| For Setting Mutations           |
+| **Reduxjs**    | State Management                |
+| **RTK-Toolkit**| API calls & global state        |
 | **Nodemailer** | Email transport service         |
-| **BullMailer** | Background job queues           🚧|
 | **Gemini API** | AI-generated newsletter content |
-| **DaisyUI**    | Sleek component styling         |
+| **DaisyUI**    | Component styling               |
 | **Exceljs**    | Excel sheet parsing             |
 
 ---
 
 ## 🖼️ UI Preview
 
->![image](https://github.com/user-attachments/assets/c444ad79-5e9b-4c3b-8c33-46829bb985ac)
+>![image](https://github.com/user-attachments/assets/835e98f0-bbf2-44ed-bc20-ac2612363d95)
 ><br/>
->![image](https://github.com/user-attachments/assets/3bfbff8e-7a2e-4a42-8220-07d339544fa3)>
+>![image](https://github.com/user-attachments/assets/19717483-4cfd-4e26-afea-4b9a89f80866)
 ><br/>
-![image](https://github.com/user-attachments/assets/9edba9a2-534c-4cd3-8cf6-b049d77cf5ea)
-
+![image](https://github.com/user-attachments/assets/6cbb7776-224c-479b-9abd-8278cb4f77db)
+><br/>
+![image](https://github.com/user-attachments/assets/3f66e69d-2856-4113-95ef-59886f6a785a)
+><br/>
+![image](https://github.com/user-attachments/assets/dcd9a27a-8e9e-4f62-b037-ef40180bd396)
+><br/>
+![image](https://github.com/user-attachments/assets/0c14efd9-b0e6-4f2a-b09c-080fc0ecb0eb)
+><br/>
+![image](https://github.com/user-attachments/assets/f4b01959-1694-496b-b823-48b2f816f03f)
+><br/>
+![image](https://github.com/user-attachments/assets/e934ba92-48ff-41dc-a5d2-4f3f14b68710)
 
 
 ---
 
 ## 📦 Getting Started
 
-Clone the project and get started locally:
-
 ```bash
-# Clone the repo
+# Clone the repository
 git clone https://github.com/yourusername/newsmail.git
 cd newsmail
 
-# Install dependencies (backend + frontend)
+# Install backend dependencies
+cd backend
 npm install
 
-# Run backend (inside /backend)
-cd backend
+# Start backend server
 npm run dev
 
-# Run frontend (inside /frontend)
+# Install frontend dependencies
 cd ../frontend
+npm install
+
+# Start frontend development server
 npm run dev
-```
-
-⚠️ Requires Node.js and MongoDB installed locally or accessible via URI.
-
-📌 Project Status
-
-Project is in its Alpha phase. Expect frequent changes and feature additions.
