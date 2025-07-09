@@ -87,7 +87,9 @@ const NewsLetterPage = () => {
           </div>
         </div>
 
-        <NewsLetterImage title={"Get AI tips, Just drop your email!"} />
+        <NewsLetterImage
+          title={"Get tech related news, Just drop your email!"}
+        />
       </div>
     </div>
   );
