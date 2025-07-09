@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Settings } from "lucide-react";
 import { AtSign } from "lucide-react";
+import { FcAbout } from "react-icons/fc";
 
 const Navbar = () => {
   return (
@@ -31,6 +32,17 @@ const Navbar = () => {
                 <AtSign className="w-5 h-5 text-primary" />
               </div>
               <h1 className="text-lg font-bold">Admin</h1>
+            </Link>
+          </div>
+          <div className="flex items-center gap-8">
+            <Link
+              to="/about"
+              className="flex items-center gap-2.5 hover:opacity-80 transition-all"
+            >
+              <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <FcAbout className="w-5 h-5 text-primary" />
+              </div>
+              <span className="hidden sm:inline">About</span>
             </Link>
           </div>
 

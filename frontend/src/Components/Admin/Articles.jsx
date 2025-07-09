@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope } from "react-icons/fa";
+import { FaNewspaper } from "react-icons/fa";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -80,9 +81,10 @@ const Articles = () => {
               </div>
               {[
                 { label: "Dashboard", path: "/admin-dashboard" },
-                { label: "About", path: "/admin/about" },
-                { label: "Create Mail", path: "/admin/create-mail" },
+                { label: "Articles", path: "/admin/articles" },
+                { label: "News Letter", path: "/admin/newsletter" },
                 { label: "Send Mail", path: "/admin/send-mail" },
+                { label: "Scrape Website", path: "/admin/scrape" },
               ].map((item) => (
                 <button
                   key={item.label}
@@ -106,41 +108,107 @@ const Articles = () => {
           )}
 
           <aside className="hidden lg:flex flex-col bg-base-300 rounded-xl py-8 px-6 shadow-md h-full min-h-[calc(100vh-8rem)]">
+            {/* Logo */}
             <div className="mb-10 flex flex-col gap-4 items-center bg-base-200 px-6 py-4 rounded-xl">
               <img
                 src="/newsMailer.svg"
                 alt="Admin"
                 className="w-24 h-10 object-contain"
               />
-              <h3 className="text-center text-2xl font-semibold">Admin</h3>
+              <h3 className="text-center text-2xl font-semibold ">Admin</h3>
             </div>
+
+            {/* Menu Items */}
             <nav className="flex flex-col gap-5">
               <SidebarItem
-                icon={<span>📊</span>}
+                icon={
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                }
                 label="Dashboard"
                 route="/admin-dashboard"
               />
+
               <SidebarItem
-                icon={<span>ℹ️</span>}
-                label="About"
-                route="/admin/about"
-              />
-              <SidebarItem
-                icon={<span>📝</span>}
+                icon={
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                }
                 label="Articles"
                 route="/admin/articles"
               />
               <SidebarItem
-                icon={<FaEnvelope />}
+                icon={
+                  <svg
+                    aria-hidden="true"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    />
+                  </svg>
+                }
+                label="NewsLetter"
+                route="/admin/newsLetter"
+              />
+              <SidebarItem
+                icon={<FaEnvelope className="w-6 h-6" />}
                 label="Send Mail"
                 route="/admin/send-mail"
               />
+              <SidebarItem
+                icon={<FaNewspaper className="w-6 h-6" />}
+                label="Scrape Website"
+                route="/admin/scrape"
+              />
             </nav>
+
+            {/* Logout */}
             <button
               onClick={handleLogout}
               className="mt-auto flex items-center gap-3 text-red-500 hover:text-red-700 px-4 py-3 hover:bg-base-100 rounded-xl transition-all duration-200"
             >
-              <span>🚪</span>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
               <span className="text-lg font-semibold">Logout</span>
             </button>
           </aside>

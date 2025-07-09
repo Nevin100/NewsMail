@@ -245,10 +245,10 @@ const AdminDashboard = () => {
             <div className="flex flex-col gap-3 mt-6 text-md">
               {[
                 "Dashboard",
-                "About",
                 "Articles",
                 "Send Mail",
                 "NewsLetter",
+                "Scrape Website",
               ].map((tab) => (
                 <button
                   key={tab}
@@ -256,12 +256,12 @@ const AdminDashboard = () => {
                     navigate(
                       tab === "Dashboard"
                         ? "/"
-                        : tab === "About"
-                        ? "/admin/about"
                         : tab === "Articles"
                         ? "/admin/articles"
                         : tab === "NewsLetter"
                         ? "/admin/newsletter"
+                        : tab === "Scrape Website"
+                        ? "/admin/scrape"
                         : "/admin/send-mail"
                     )
                   }
@@ -316,26 +316,7 @@ const AdminDashboard = () => {
                   </svg>
                 }
                 label="Dashboard"
-                route="/"
-              />
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-                    />
-                  </svg>
-                }
-                label="About"
-                route="/admin/about"
+                route="/admin-dashboard"
               />
               <SidebarItem
                 icon={
@@ -517,6 +498,7 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
+
           {/* Charts Container */}
           <div className="flex flex-col lg:flex-row lg:gap-6 gap-6">
             {/* Line Chart */}
@@ -556,22 +538,6 @@ const AdminDashboard = () => {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-          </div>
-
-          {/* Line chart on mobile (after cards) */}
-          <div className="lg:hidden bg-base-200 rounded-xl p-4">
-            <h3 className="font-bold lg:text-3xl text-xl text-center mb-2">
-              User Growth
-            </h3>
-            <ResponsiveContainer width="100%" height={350}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="users" stroke="#3b82f6" />
-              </LineChart>
-            </ResponsiveContainer>
           </div>
 
           {/* Search and Filter */}

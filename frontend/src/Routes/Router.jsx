@@ -5,7 +5,7 @@ import Settings from "../Pages/Settings.jsx";
 import ProtectedRoute from "../Context/Protectedroute.jsx";
 import AdminDashboard from "../Components/Admin/AdminDashboard.jsx";
 import AdminLogin from "../Components/Admin/AdminLogin.jsx";
-import About from "../Components/Admin/About.jsx";
+import About from "../Pages/About.jsx";
 import Articles from "../Components/Admin/Articles.jsx";
 import SendMail from "../Components/Admin/SendMail.jsx";
 import NewsLetter from "../Components/Admin/NewsLetter.jsx";
@@ -18,13 +18,13 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <NewsLetterPage /> },
       { path: "/settings", element: <Settings /> },
+      { path: "/about", element: <About /> },
       { path: "/admin", element: <AdminLogin /> },
 
       {
         element: <ProtectedRoute />,
         children: [
           { path: "/admin-dashboard", element: <AdminDashboard /> },
-          { path: "/admin/about", element: <About /> },
           { path: "/admin/articles", element: <Articles /> },
           { path: "/admin/send-mail", element: <SendMail /> },
           { path: "/admin/newsLetter", element: <NewsLetter /> },
