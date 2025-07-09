@@ -286,8 +286,9 @@ const ScrapWebsite = () => {
                   <button
                     onClick={handleGenerate}
                     className="btn text-base-content text-base lg:text-lg"
+                    disabled={!url || loading}
                   >
-                    ✨ Generate Newsletter
+                    {loading ? "Generating..." : "Generate NewsLetter ⭐"}
                   </button>
                   {newsletterHTML && (
                     <button

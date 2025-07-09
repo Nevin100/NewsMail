@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const sendNewsLetter = async (to, subject, html) => {
+const sendNewsLetter = async (to, subject, html, bcc = []) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -11,8 +11,9 @@ const sendNewsLetter = async (to, subject, html) => {
     });
 
     const mailOptions = {
-      from: `"Nevin Bali Newsletter" <${process.env.MAIL_USER}>`,
-      to,
+      from: '"Your Personal NewsLetter from " <test20000000@email.com>',
+      to: to || undefined,
+      bcc: bcc.length > 0 ? bcc : undefined,
       subject,
       html,
     };

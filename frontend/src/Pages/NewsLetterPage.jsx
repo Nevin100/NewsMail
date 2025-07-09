@@ -9,6 +9,7 @@ const NewsLetterPage = () => {
   const [formData, setFormData] = useState({
     email: "",
   });
+  const [loading, setloading] = useState(false);
 
   const [addMail] = useAddMailMutation();
 
@@ -16,6 +17,7 @@ const NewsLetterPage = () => {
     e.preventDefault();
     if (!formData.email.trim()) return;
 
+    setloading(true);
     try {
       await addMail({ mail: formData.email }).unwrap();
       setFormData({ email: "" });
@@ -30,6 +32,8 @@ const NewsLetterPage = () => {
       } else {
         toast.error("Something went wrong. Please try again later.");
       }
+    } finally {
+      setloading(false);
     }
   };
 
@@ -72,8 +76,12 @@ const NewsLetterPage = () => {
                 </div>
               </div>
 
-              <button type="submit" className="btn btn-primary w-full">
-                Subscribe
+              <button
+                type="submit"
+                className="btn btn-primary w-full"
+                disabled={loading}
+              >
+                {loading ? "Subscribing..." : "Sbuscribe"}
               </button>
             </form>
           </div>

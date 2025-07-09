@@ -82,12 +82,13 @@ app.post("/admin/generate-newsletter", verifyToken, async (req, res) => {
 
 //NewsLetter Route :
 app.post("/admin/send-newsletter", verifyToken, async (req, res) => {
-  const { to, subject, html } = req.body;
+  const { to, bcc, subject, html } = req.body;
 
-  if (!to || !subject) {
-    return res
-      .status(400)
-      .json({ message: "Missing fields: 'to' or 'subject'", error: true });
+  if ((!to && (!bcc || bcc.length === 0)) || !subject) {
+    return res.status(400).json({
+      message: "Missing fields: Provide either 'to' or 'bcc' and 'subject'",
+      error: true,
+    });
   }
 
   try {
@@ -103,11 +104,13 @@ app.post("/admin/send-newsletter", verifyToken, async (req, res) => {
         .json({ message: "No newsletter HTML found to send", error: true });
     }
 
-    const result = await sendNewsLetter(to, subject, htmlToSend);
+    const result = await sendNewsLetter(to, subject, htmlToSend, bcc);
 
-    res
-      .status(200)
-      .json({ error: false, message: "Email sent successfully", data: result });
+    res.status(200).json({
+      error: false,
+      message: "Email sent successfully",
+      data: result,
+    });
   } catch (err) {
     console.error("Error sending newsletter:", err);
     res.status(500).json({ error: true, message: "Failed to send email" });
