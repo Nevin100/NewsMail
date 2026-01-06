@@ -40,7 +40,7 @@ app.get("/", async (req, res) => {
 });
 
 //AI Routes :
-app.post("/admin/generate-newsletter", verifyToken, async (req, res) => {
+app.post("/admin/generate-newsletter" , async (req, res) => {
   let lastGeneratedHtml = ""; // store globally in memory
   try {
     const articles = await Article.find().sort({ createdAt: -1 }).limit(5);
@@ -51,10 +51,9 @@ app.post("/admin/generate-newsletter", verifyToken, async (req, res) => {
         .json({ message: "No articles found.", error: true });
 
     const prompt = await generateNewsletterHTML(articles);
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(prompt);
     const response = await result.response;
-
     let rawHtml = response.text();
     let cleanHtml = rawHtml.replace(/```html|```/g, "").trim();
 
