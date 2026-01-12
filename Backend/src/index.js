@@ -7,10 +7,7 @@ import ConnectDB from "./Lib/db.js";
 import cookieParser from "cookie-parser";
 import AdminRoutes from "./Routes/admin.routes.js";
 import verifyToken from "./Middleware/verifyToken.js";
-
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import generateNewsletterHTML from "./Lib/generateNewsletter.js";
-
 import sendNewsLetter from "./Lib/sendnewsLetter.js";
 import NewsLetter from "./Model/newsLetter.model.js";
 import Article from "./Model/article.model.js";
@@ -19,7 +16,10 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
-const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_MODEL = "llama-3.1-8b-instant";
+
 
 app.use(express.json());
 app.use(
@@ -29,6 +29,44 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+const callGroqForHTML = async (prompt) => {
+  const response = await fetch(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an expert email marketer. Return ONLY clean, valid HTML. No markdown, no explanations.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        temperature: 0.4,
+        max_tokens: 2000,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.text();
+    console.error("Groq error:", err);
+    throw new Error("Groq API failed");
+  }
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+};
 
 //Routes :
 app.use("/news-mail", MailRoute);
@@ -40,31 +78,32 @@ app.get("/", async (req, res) => {
 });
 
 //AI Routes :
-app.post("/admin/generate-newsletter" , async (req, res) => {
-  let lastGeneratedHtml = ""; // store globally in memory
+app.post("/admin/generate-newsletter", async (req, res) => {
+  let lastGeneratedHtml = "";
   try {
     const articles = await Article.find().sort({ createdAt: -1 }).limit(5);
 
-    if (!articles.length)
+    if (!articles.length) {
       return res
         .status(404)
         .json({ message: "No articles found.", error: true });
+    }
 
     const prompt = await generateNewsletterHTML(articles);
-    const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    let rawHtml = response.text();
-    let cleanHtml = rawHtml.replace(/```html|```/g, "").trim();
+
+    const rawHtml = await callGroqForHTML(prompt);
+
+    const cleanHtml = rawHtml
+      .replace(/```html|```/gi, "")
+      .trim();
 
     if (!cleanHtml) {
       return res
         .status(500)
-        .json({ error: true, message: "Empty response from Gemini" });
+        .json({ error: true, message: "Empty response from AI" });
     }
 
     const saved = await NewsLetter.create({ html: cleanHtml });
-
     lastGeneratedHtml = cleanHtml;
 
     res.status(200).json({
