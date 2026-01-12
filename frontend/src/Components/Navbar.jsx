@@ -43,7 +43,7 @@ const Navbar = () => {
               <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
                 <FcAbout className="w-5 h-5 text-primary" />
               </div>
-              <span className="hidden sm:inline">About</span>
+              <span className="hidden sm:inline">Admin</span>
             </Link>
           </div>
 
