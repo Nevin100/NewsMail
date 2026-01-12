@@ -137,21 +137,28 @@ app.post("/admin/send-newsletter", verifyToken, async (req, res) => {
         .then((doc) => doc?.html));
 
     if (!htmlToSend) {
-      return res
-        .status(400)
-        .json({ message: "No newsletter HTML found to send", error: true });
+      return res.status(400).json({
+        message: "No newsletter HTML found to send",
+        error: true,
+      });
     }
 
-    const result = await sendNewsLetter(to, subject, htmlToSend, bcc);
+    // NON-BLOCKING EMAIL SEND
+    sendNewsLetter(to, subject, htmlToSend, bcc)
+      .then(() => console.log("Newsletter sent"))
+      .catch((err) => console.error("Newsletter error:", err));
 
+    // INSTANT RESPONSE
     res.status(200).json({
       error: false,
-      message: "Email sent successfully",
-      data: result,
+      message: "Newsletter dispatch started",
     });
   } catch (err) {
     console.error("Error sending newsletter:", err);
-    res.status(500).json({ error: true, message: "Failed to send email" });
+    res.status(500).json({
+      error: true,
+      message: "Failed to start newsletter dispatch",
+    });
   }
 });
 
