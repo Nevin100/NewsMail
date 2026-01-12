@@ -8,9 +8,9 @@ import cookieParser from "cookie-parser";
 import AdminRoutes from "./Routes/admin.routes.js";
 import verifyToken from "./Middleware/verifyToken.js";
 import generateNewsletterHTML from "./Lib/generateNewsletter.js";
-import sendNewsLetter from "./Lib/sendnewsLetter.js";
 import NewsLetter from "./Model/newsLetter.model.js";
 import Article from "./Model/article.model.js";
+import { Resend } from "resend";
 
 dotenv.config();
 
@@ -21,6 +21,8 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_MODEL = "llama-3.1-8b-instant";
 
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 app.use(express.json());
 app.use(
   cors({
@@ -29,6 +31,28 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+// Send Newsletter Function :
+export const sendNewsLetter = async (to, subject, html, bcc = []) => {
+  if (!to && (!bcc || bcc.length === 0)) {
+    throw new Error("No recipients provided");
+  }
+
+  if (!html || html.trim() === "") {
+    throw new Error("HTML content is empty");
+  }
+
+  const result = await resend.emails.send({
+    from: "NewsMail <onboarding@resend.dev>",
+    to: to ? [to] : undefined,
+    bcc: bcc && bcc.length > 0 ? bcc : undefined,
+    subject,
+    html,
+  });
+
+  console.log("RESEND RESULT:", result);
+  return result;
+};
 
 const callGroqForHTML = async (prompt) => {
   const response = await fetch(
