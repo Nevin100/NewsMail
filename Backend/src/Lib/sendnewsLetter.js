@@ -1,29 +1,16 @@
-import nodemailer from "nodemailer";
+// Lib/sendNewsLetter.js
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendNewsLetter = async (to, subject, html, bcc = []) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: '"Your Personal NewsLetter from " <Nevin Bali>',
-      to: to || undefined,
-      bcc: bcc.length > 0 ? bcc : undefined,
-      subject,
-      html,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    return info;
-  } catch (error) {
-    console.error("Email sending failed:", error);
-    throw error;
-  }
+  return resend.emails.send({
+    from: "NewsMail <Nevin Bali>", 
+    to: to ? [to] : undefined,
+    bcc: bcc && bcc.length > 0 ? bcc : undefined,
+    subject,
+    html,
+  });
 };
 
 export default sendNewsLetter;
