@@ -11,7 +11,7 @@ const sendNewsLetter = async (to, subject, html, bcc = []) => {
     });
 
     const mailOptions = {
-      from: '"Your Personal NewsLetter from " <test20000000@email.com>',
+      from: '"Your Personal NewsLetter from " <Nevin Bali>',
       to: to || undefined,
       bcc: bcc.length > 0 ? bcc : undefined,
       subject,
