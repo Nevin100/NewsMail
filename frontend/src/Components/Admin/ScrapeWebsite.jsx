@@ -48,48 +48,46 @@ const ScrapWebsite = () => {
   };
 
   const handleScrape = async () => {
-  setScrapeLoading(true);
-  try {
-    const res = await axios.post(
-      "https://newsmail-2s5a.onrender.com/articles/scrape",
-      { url }
-    );
-    setArticles(res.data.data || []);
-    toast.success("Scraping completed");
-  } catch (err) {
-    console.error("Scrape failed:", err);
-    toast.error("Scraping failed");
-  } finally {
-    setScrapeLoading(false);
-  }
-};
-
+    setScrapeLoading(true);
+    try {
+      const res = await axios.post(
+        "https://newsmail-2s5a.onrender.com/articles/scrape",
+        { url }
+      );
+      setArticles(res.data.data || []);
+      toast.success("Scraping completed");
+    } catch (err) {
+      console.error("Scrape failed:", err);
+      toast.error("Scraping failed");
+    } finally {
+      setScrapeLoading(false);
+    }
+  };
 
   const handleGenerate = async () => {
-  setGenerateLoading(true);
-  toast.loading("Generating newsletter… this may take a few seconds");
+    setGenerateLoading(true);
+    toast.loading("Generating newsletter… this may take a few seconds");
 
-  try {
-    const res = await axios.post(
-      "https://newsmail-2s5a.onrender.com/admin/generate-newsletter",
-      {},
-      {
-        timeout: 60000,
-      }
-    );
+    try {
+      const res = await axios.post(
+        "https://newsmail-2s5a.onrender.com/admin/generate-newsletter",
+        {},
+        {
+          timeout: 60000,
+        }
+      );
 
-    setNewsletterHTML(res.data.html);
-    toast.dismiss();
-    toast.success("Newsletter generated successfully!");
-  } catch (err) {
-    console.error("Generation failed:", err);
-    toast.dismiss();
-    toast.error("Newsletter generation failed");
-  } finally {
-    setGenerateLoading(false);
-  }
-};
-
+      setNewsletterHTML(res.data.html);
+      toast.dismiss();
+      toast.success("Newsletter generated successfully!");
+    } catch (err) {
+      console.error("Generation failed:", err);
+      toast.dismiss();
+      toast.error("Newsletter generation failed");
+    } finally {
+      setGenerateLoading(false);
+    }
+  };
 
   return (
     <div className="p-4 md:p-6 mt-16 min-h-screen">
@@ -268,13 +266,12 @@ const ScrapWebsite = () => {
               onChange={(e) => setUrl(e.target.value)}
             />
             <button
-  onClick={handleScrape}
-  className="btn btn-primary"
-  disabled={!url || scrapeLoading}
->
-  {scrapeLoading ? "Scraping..." : "Scrape"}
-</button>
-
+              onClick={handleScrape}
+              className="btn btn-primary"
+              disabled={!url || scrapeLoading}
+            >
+              {scrapeLoading ? "Scraping..." : "Scrape"}
+            </button>
           </div>
 
           {articles.length > 0 && (
@@ -309,12 +306,14 @@ const ScrapWebsite = () => {
 
                 <div className="mt-6 flex flex-wrap gap-4">
                   <button
-  onClick={handleGenerate}
-  className="btn"
-  disabled={generateLoading}
->
-  {generateLoading ? "Generating..." : "Generate Newsletter ⭐"}
-</button>
+                    onClick={handleGenerate}
+                    className="btn"
+                    disabled={generateLoading}
+                  >
+                    {generateLoading
+                      ? "Generating..."
+                      : "Generate Newsletter ⭐"}
+                  </button>
 
                   {newsletterHTML && (
                     <button

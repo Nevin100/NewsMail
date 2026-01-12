@@ -41,7 +41,7 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/admin/get-mails"
+          "http://localhost:8000/admin/get-mails"
         );
         setEmails(res.data.data);
         setFilteredEmails(res.data.data);
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
     const fetchArticles = async () => {
       try {
         const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/total-articles"
+          "https://newsmail-2s5a.onrender.com/articles/total-articles"
         );
         setArticles(res.data.data.length);
       } catch (err) {
