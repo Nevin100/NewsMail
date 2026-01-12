@@ -29,42 +29,45 @@ const welcomeTemplate = (name) => `
 
 export const mailsLetter = async (req, res) => {
   const { mail } = req.body;
+
   try {
     if (!mail) {
-      return res
-        .status(401)
-        .json({ message: "Mail Field is empty", error: true });
+      return res.status(400).json({
+        message: "Mail field is empty",
+        error: true,
+      });
     }
 
-    const newMail = await Mail.findOne({ mail });
-    if (newMail) {
-      return res
-        .status(401)
-        .json({ message: "Mail Already registered", error: true });
+    const existingMail = await Mail.findOne({ mail });
+    if (existingMail) {
+      return res.status(409).json({
+        message: "Mail already subscribed",
+        error: true,
+      });
     }
 
-    const NewMail = new Mail({
+    const newMail = await Mail.create({ mail });
+
+    sendNewsLetter(
       mail,
-    });
-
-    await NewMail.save();
-
-    await sendNewsLetter(
-      mail, // to
       "Welcome to NewsMailer 🎉",
       welcomeTemplate(mail)
-    );
+    ).catch(console.error);
 
     res.status(200).json({
       message: "Mail registered successfully",
       error: false,
-      data: NewMail,
+      data: newMail,
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: "Internal Server Issue", error: true });
+    console.error(error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: true,
+    });
   }
 };
+
 
 export const CSVDownload = async (req, res) => {
   try {

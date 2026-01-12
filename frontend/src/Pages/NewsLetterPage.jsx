@@ -2,7 +2,6 @@ import { useState } from "react";
 import NewsLetterImage from "../Components/NewsLetterImage.jsx";
 import { Mail } from "lucide-react";
 import { useAddMailMutation } from "../Redux/Features/Mail.js";
-import Swal from "sweetalert2";
 import { toast } from "react-hot-toast";
 
 const NewsLetterPage = () => {

@@ -41,7 +41,7 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:8000/admin/get-mails"
+          "https://newsmail-2s5a.onrender.com/admin/get-mails"
         );
         setEmails(res.data.data);
         setFilteredEmails(res.data.data);
