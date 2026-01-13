@@ -26,7 +26,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://news-mail.vercel.app"],
+    origin: ["http://localhost:5173", "https://news-mail.vercel.app", "https://newsmail.nevinbali.me" ],
     credentials: true,
   })
 );
