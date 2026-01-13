@@ -43,7 +43,7 @@ export const sendNewsLetter = async (to, subject, html, bcc = []) => {
   }
 
   const result = await resend.emails.send({
-    from: "NewsMail <onboarding@resend.dev>",
+    from: "NewsMail <newsletter@nevinbali.me>",
     to: to ? [to] : undefined,
     bcc: bcc && bcc.length > 0 ? bcc : undefined,
     subject,
