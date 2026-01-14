@@ -41,7 +41,7 @@
 | **Reduxjs**    | State Management                |
 | **RTK-Toolkit**| API calls & global state        |
 | **Nodemailer** | Email transport service         |
-| **Gemini API** | AI-generated newsletter content |
+| **Groq API** | AI-generated newsletter content |
 | **DaisyUI**    | Component styling               |
 | **Exceljs**    | Excel sheet parsing             |
 
