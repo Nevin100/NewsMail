@@ -4,9 +4,6 @@
 > _A powerful MERN stack-based Newsletter Platform – AI-powered, admin-controlled, and built for bulk mail efficiency._
 
 ---
-# 📷 Live Preview: https://news-mail.vercel.app/
-
----
 ## ✨ Project Overview
 
 **Newsmail** is a production-ready full-stack Newsletter application built using the **MERN** stack (MongoDB, Express, React, Node). Designed with a clean, modern UI powered by **DaisyUI’s 34 sleek themes**, Newsmail lets users collect emails, manage campaigns, and send personalized newsletters — enhanced with **AI-generated content** via the **Gemini API**.
@@ -23,8 +20,8 @@
 - 📁 **Excel Parsing** (using `exceljs`) to upload recipient lists
 - 🔐 **Admin Authentication** system
 - 📊 **Admin Dashboard** for creating and managing campaigns
-- ✉️ **Nodemailer** setup for sending rich emails
-- 🧹 **Web Scraping** via Cheerio + Axios for newsletter content sourcing --> currently scrape some websites as it is alpha model***
+- ✉️ **Resend Email Sending** setup for sending rich emails
+- 🧹 **Web Scraping** via Cheerio + Axios for newsletter content sourcing --> currently scrape some websites as it is alpha model**
 - 🚀 **Bulk Mailer**  is working ✅
 
 ``` This is an alpha model 😄```
@@ -40,7 +37,7 @@
 | **Node.js**    | Backend runtime                 |
 | **Reduxjs**    | State Management                |
 | **RTK-Toolkit**| API calls & global state        |
-| **Nodemailer** | Email transport service         |
+| **Resend** | Email transport service         |
 | **Groq API** | AI-generated newsletter content |
 | **DaisyUI**    | Component styling               |
 | **Exceljs**    | Excel sheet parsing             |
