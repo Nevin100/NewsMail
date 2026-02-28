@@ -1,7 +1,8 @@
-# 📰 @Newsmail - Web Scraping (Cheerio + Axios) + AI + NodeMailer + Admin Dashboard 😎
+# 📰 @Newsmail - Web Scraping + AI + NodeMailer + Admin Dashboard 
 
 > ✅ **COMPLETED & FUNCTIONAL**  
 > _A powerful MERN stack-based Newsletter Platform – AI-powered, admin-controlled, and built for bulk mail efficiency._
+<img width="1345" height="612" alt="image" src="https://github.com/user-attachments/assets/9da24d08-187c-4ad9-9b69-eed9c535a4d2" />
 
 ---
 ## ✨ Project Overview
@@ -46,21 +47,22 @@
 
 ## 🖼️ UI Preview
 
->![image](https://github.com/user-attachments/assets/835e98f0-bbf2-44ed-bc20-ac2612363d95)
-><br/>
->![image](https://github.com/user-attachments/assets/19717483-4cfd-4e26-afea-4b9a89f80866)
-><br/>
-![image](https://github.com/user-attachments/assets/6cbb7776-224c-479b-9abd-8278cb4f77db)
-><br/>
-![image](https://github.com/user-attachments/assets/3f66e69d-2856-4113-95ef-59886f6a785a)
-><br/>
-![image](https://github.com/user-attachments/assets/dcd9a27a-8e9e-4f62-b037-ef40180bd396)
-><br/>
-![image](https://github.com/user-attachments/assets/0c14efd9-b0e6-4f2a-b09c-080fc0ecb0eb)
-><br/>
-![image](https://github.com/user-attachments/assets/f4b01959-1694-496b-b823-48b2f816f03f)
-><br/>
-![image](https://github.com/user-attachments/assets/e934ba92-48ff-41dc-a5d2-4f3f14b68710)
+<img width="1345" height="602" alt="image" src="https://github.com/user-attachments/assets/2820029f-380d-42fe-b6de-d66159982f4d" />
+<br/>
+<img width="1352" height="610" alt="image" src="https://github.com/user-attachments/assets/c23bbb9a-7876-442c-9d2f-d8a1fd122e97" />
+<br/>
+<img width="1350" height="607" alt="image" src="https://github.com/user-attachments/assets/b9505398-ac16-4439-9b72-04894e38706c" />
+<br/>
+<img width="1353" height="603" alt="image" src="https://github.com/user-attachments/assets/352ef61a-57a1-414a-9301-fee12b9d75ee" />
+<br/>
+<img width="1349" height="606" alt="image" src="https://github.com/user-attachments/assets/bad5a65f-82a0-4611-8c93-63b05dd7e50c" />
+<br/>
+<img width="1352" height="599" alt="image" src="https://github.com/user-attachments/assets/08957f69-33ec-47a2-a2c7-d379f23cee28" />
+<br/>
+<img width="1356" height="605" alt="image" src="https://github.com/user-attachments/assets/c449a73c-5d3c-491c-961a-02c87a1bd88a" />
+<br/>
+<img width="1357" height="506" alt="image" src="https://github.com/user-attachments/assets/382af0d9-21cd-4934-80be-85b254a27a7e" />
+
 
 
 ---
