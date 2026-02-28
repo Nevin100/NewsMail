@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEnvelope } from "react-icons/fa";
-import { FaNewspaper } from "react-icons/fa";
+import { FaEnvelope, FaGlobe, FaMagic, FaPaperPlane, FaLaptop, FaMobileAlt, FaTrash } from "react-icons/fa";
+import { FaNewspaper, FaBookOpen, FaChevronRight } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -12,334 +12,189 @@ const ScrapWebsite = () => {
   const [url, setUrl] = useState("");
   const [articles, setArticles] = useState([]);
   const [newsletterHTML, setNewsletterHTML] = useState("");
-  const [loading, setLoading] = useState(false);
   const [scrapeLoading, setScrapeLoading] = useState(false);
   const [generateLoading, setGenerateLoading] = useState(false);
+  const [previewMode, setPreviewMode] = useState("desktop"); 
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(
-        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
-        {
-          withCredentials: true,
-        }
-      );
-      toast.success("Logged out successfully!");
-      navigate("/admin");
-    } catch (error) {
-      console.log(error);
-      toast.error("Logout unsuccessful!");
-    }
-  };
-
-  const SidebarItem = ({ icon, label, route }) => {
-    const isActive = window.location.pathname.includes(route);
-    return (
-      <button
-        onClick={() => navigate(route)}
-        className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
-          isActive ? "bg-base-200 shadow" : "hover:bg-base-100"
-        }`}
-      >
-        {icon}
-        <span className="text-lg lg:text-xl">{label}</span>
-      </button>
-    );
-  };
+  const SidebarItem = ({ icon, label, route }) => (
+    <button
+      onClick={() => navigate(route)}
+      className={`flex items-center gap-4 px-4 py-3 rounded-2xl font-bold transition-all duration-300 ${
+        window.location.pathname === route 
+          ? "bg-primary text-primary-content shadow-lg shadow-primary/30" 
+          : "hover:bg-base-200 opacity-70 hover:opacity-100"
+      }`}
+    >
+      {icon} <span className="text-md">{label}</span>
+    </button>
+  );
 
   const handleScrape = async () => {
     setScrapeLoading(true);
+    const loadingToast = toast.loading("Scraping knowledge from the web...");
     try {
-      const res = await axios.post(
-        "https://newsmail-2s5a.onrender.com/articles/scrape",
-        { url }
-      );
+      const res = await axios.post("https://newsmail-2s5a.onrender.com/articles/scrape", { url });
       setArticles(res.data.data || []);
-      toast.success("Scraping completed");
+      toast.success("Scraping completed!", { id: loadingToast });
     } catch (err) {
-      console.error("Scrape failed:", err);
-      toast.error("Scraping failed");
-    } finally {
-      setScrapeLoading(false);
-    }
+      toast.error("Scraping failed. Check URL.", { id: loadingToast });
+    } finally { setScrapeLoading(false); }
   };
 
   const handleGenerate = async () => {
     setGenerateLoading(true);
-    toast.loading("Generating newsletter… this may take a few seconds");
-
+    const genToast = toast.loading("AI is crafting your newsletter...");
     try {
-      const res = await axios.post(
-        "https://newsmail-2s5a.onrender.com/admin/generate-newsletter",
-        {},
-        {
-          timeout: 60000,
-        }
-      );
-
+      const res = await axios.post("https://newsmail-2s5a.onrender.com/admin/generate-newsletter", {}, { timeout: 60000 });
       setNewsletterHTML(res.data.html);
-      toast.dismiss();
-      toast.success("Newsletter generated successfully!");
+      toast.success("Newsletter ready for takeoff! 🚀", { id: genToast });
     } catch (err) {
-      console.error("Generation failed:", err);
-      toast.dismiss();
-      toast.error("Newsletter generation failed");
-    } finally {
-      setGenerateLoading(false);
-    }
+      toast.error("Generation failed.", { id: genToast });
+    } finally { setGenerateLoading(false); }
   };
 
   return (
-    <div className="p-4 md:p-6 mt-16 min-h-screen">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="lg:hidden flex justify-between items-center mb-4">
-            <h3 className="text-2xl font-bold">Menu</h3>
-            <button
-              className="text-3xl font-bold bg-base-200 px-4 py-2 rounded"
-              onClick={() => setShowSidebar((prev) => !prev)}
-            >
-              ☰
-            </button>
+    <div className="min-h-screen bg-base-100 p-4 md:p-8 mt-12">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-8">
+        
+        {/* Sidebar - Consistent Branding */}
+        <aside className="lg:col-span-1 space-y-8">
+          <div className="p-6 bg-primary/10 rounded-[2rem] text-center group">
+            <div className="w-16 h-16 bg-primary rounded-2xl mx-auto mb-4 flex items-center justify-center text-primary-content shadow-lg rotate-3 group-hover:rotate-0 transition-transform">
+              <FaGlobe size={28} />
+            </div>
+            <h2 className="font-black text-xl italic tracking-tighter text-base-content">Engine Room</h2>
           </div>
 
-          {showSidebar && (
-            <div className="lg:hidden bg-base-200 p-6 rounded-xl">
-              <div className="flex flex-col items-center mb-6">
-                <img
-                  src="https://t4.ftcdn.net/jpg/02/27/45/09/360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg"
-                  alt="Admin Avatar"
-                  className="w-20 h-20 rounded-full mb-2"
-                />
-                <h1 className="text-xl font-semibold text-center mt-2">
-                  Admin 🛡️
-                </h1>
-              </div>
-              {[
-                { label: "Dashboard", path: "/admin-dashboard" },
-                { label: "Articles", path: "/admin/articles" },
-                { label: "News Letter", path: "/admin/newsletter" },
-                { label: "Send Mail", path: "/admin/send-mail" },
-                { label: "Scrape Website", path: "/admin/scrape" },
-              ].map((item) => (
+          <nav className="flex flex-col gap-2">
+            <SidebarItem icon={<FaNewspaper />} label="Dashboard" route="/admin-dashboard" />
+            <SidebarItem icon={<FaBookOpen />} label="Articles" route="/admin/articles" />
+            <SidebarItem icon={<FaEnvelope />} label="Send Mail" route="/admin/send-mail" />
+            <SidebarItem icon={<FaGlobe />} label="Scrape" route="/admin/scrape" />
+          </nav>
+
+        </aside>
+
+        {/* Main Content */}
+        <div className="lg:col-span-4 space-y-8">
+          
+          {/* Scrape Input Section */}
+          <section className="bg-base-200 p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-base-content/5 relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+            <div className="relative z-10 text-center md:text-left">
+              <h1 className="text-4xl md:text-6xl font-black tracking-tighter italic mb-4">
+                Web <span className="text-primary not-italic font-bold">Scraper</span>
+              </h1>
+              <p className="text-sm font-bold opacity-40 uppercase tracking-[0.2em] mb-10">Inject a URL to extract intelligence</p>
+              
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none opacity-30">
+                    <FaGlobe />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="https://techcrunch.com/latest"
+                    className="input input-lg w-full pl-12 bg-base-100 border-none ring-1 ring-base-content/10 focus:ring-2 focus:ring-primary rounded-2xl"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                  />
+                </div>
                 <button
-                  key={item.label}
-                  onClick={() => navigate(item.path)}
-                  className={`w-full text-left p-3 rounded-xl text-lg font-medium cursor-pointer ${
-                    window.location.pathname.includes(item.path)
-                      ? "bg-base-100"
-                      : "hover:bg-base-300 hover:text-white"
-                  }`}
+                  onClick={handleScrape}
+                  disabled={!url || scrapeLoading}
+                  className="btn btn-primary btn-lg rounded-2xl px-10 shadow-xl shadow-primary/20 gap-2 transition-all hover:scale-105"
                 >
-                  {item.label}
+                  {scrapeLoading ? <span className="loading loading-spinner"></span> : <FaMagic />}
+                  {scrapeLoading ? "Mining..." : "Scrape"}
                 </button>
-              ))}
-              <button
-                onClick={handleLogout}
-                className="mt-6 text-lg text-red-500 font-semibold hover:text-red-700"
-              >
-                Logout
-              </button>
+              </div>
+            </div>
+          </section>
+
+          {/* Scraped Articles Bento Grid */}
+          {articles.length > 0 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-5 duration-700">
+              <div className="flex items-center justify-between px-4">
+                <h2 className="text-2xl font-black italic">Recent Extractions</h2>
+                <button onClick={() => setArticles([])} className="btn btn-ghost btn-sm text-red-500 hover:bg-red-50 rounded-xl">
+                  <FaTrash /> Clear All
+                </button>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {articles.map((item) => (
+                  <div key={item._id} className="bg-base-200 p-5 rounded-[2rem] border border-base-content/5 shadow-md flex flex-col justify-between group">
+                    <div>
+                      <h3 className="font-bold text-lg mb-2 leading-tight group-hover:text-primary transition-colors line-clamp-2 italic">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs opacity-50 line-clamp-3 leading-relaxed font-medium">{item.summary}</p>
+                    </div>
+                    <div className="pt-4 mt-4 border-t border-base-content/5 flex justify-end">
+                      <a href={item.link} target="_blank" rel="noreferrer" className="text-xs font-black uppercase text-primary flex items-center gap-1 hover:gap-2 transition-all">
+                        Link <FaChevronRight size={10} />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Bar */}
+              <div className="bg-base-300/50 backdrop-blur-md p-6 rounded-[2.5rem] flex flex-wrap gap-4 items-center justify-center border border-primary/20 shadow-lg shadow-primary/5">
+                <button
+                  onClick={handleGenerate}
+                  disabled={generateLoading}
+                  className="btn btn-primary rounded-2xl px-8 gap-2 shadow-lg shadow-primary/20"
+                >
+                  {generateLoading ? <span className="loading loading-spinner"></span> : <FaMagic />}
+                  Generate AI Newsletter
+                </button>
+                {newsletterHTML && (
+                  <button
+                    onClick={() => navigate("/admin/send-mail")}
+                    className="btn btn-secondary rounded-2xl px-8 gap-2 shadow-lg shadow-secondary/20"
+                  >
+                    <FaPaperPlane /> Ready to Dispatch
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-          <aside className="hidden lg:flex flex-col bg-base-300 rounded-xl py-8 px-6 shadow-md h-full min-h-[calc(100vh-8rem)]">
-            {/* Logo */}
-            <div className="mb-10 flex flex-col gap-4 items-center bg-base-200 px-6 py-4 rounded-xl">
-              <img
-                src="/newsMailer.svg"
-                alt="Admin"
-                className="w-24 h-10 object-contain"
-              />
-              <h3 className="text-center text-2xl font-semibold ">Admin</h3>
-            </div>
-
-            {/* Menu Items */}
-            <nav className="flex flex-col gap-5">
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+          {/* Newsletter Previewer 2.0 */}
+          {newsletterHTML && (
+            <div className="space-y-6 animate-in zoom-in-95 duration-500">
+              <div className="flex items-center justify-between px-4">
+                <h2 className="text-2xl font-black italic">Email Preview</h2>
+                <div className="flex bg-base-200 p-1 rounded-xl gap-1">
+                  <button 
+                    onClick={() => setPreviewMode("desktop")}
+                    className={`p-2 rounded-lg transition-all ${previewMode === 'desktop' ? 'bg-primary text-primary-content shadow-md' : 'opacity-40 hover:opacity-100'}`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                }
-                label="Dashboard"
-                route="/admin-dashboard"
-              />
-
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                }
-                label="Articles"
-                route="/admin/articles"
-              />
-              <SidebarItem
-                icon={
-                  <svg
-                    aria-hidden="true"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                }
-                label="NewsLetter"
-                route="/admin/newsLetter"
-              />
-              <SidebarItem
-                icon={<FaEnvelope className="w-6 h-6" />}
-                label="Send Mail"
-                route="/admin/send-mail"
-              />
-              <SidebarItem
-                icon={<FaNewspaper className="w-6 h-6" />}
-                label="Scrape Website"
-                route="/admin/scrape"
-              />
-            </nav>
-
-            {/* Logout */}
-            <button
-              onClick={handleLogout}
-              className="mt-auto flex items-center gap-3 text-red-500 hover:text-red-700 px-4 py-3 hover:bg-base-100 rounded-xl transition-all duration-200"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              <span className="text-lg font-semibold">Logout</span>
-            </button>
-          </aside>
-        </div>
-
-        {/* Scrape Section */}
-        <div className="lg:col-span-3 bg-base-200 p-6 md:p-10 rounded-xl shadow-md">
-          <h1 className="text-3xl lg:text-5xl font-bold mb-10 text-center text-primary">
-            Scrape Website 📰
-          </h1>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
-            <input
-              type="text"
-              placeholder="Enter URL to scrape..."
-              className="input input-bordered w-full sm:w-2/3 text-base lg:text-lg"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
-            <button
-              onClick={handleScrape}
-              className="btn btn-primary"
-              disabled={!url || scrapeLoading}
-            >
-              {scrapeLoading ? "Scraping..." : "Scrape"}
-            </button>
-          </div>
-
-          {articles.length > 0 && (
-            <>
-              <div className="bg-base-300 p-6 rounded-xl shadow mb-6">
-                <h2 className="text-2xl lg:text-4xl font-semibold mb-6">
-                  Scraped Articles
-                </h2>
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {articles.map((item) => (
-                    <div
-                      key={item._id}
-                      className="bg-base-100 p-4 rounded-xl shadow border border-base-300"
-                    >
-                      <h3 className="font-bold text-lg lg:text-xl mb-1">
-                        {item.title.length > 70
-                          ? item.title.slice(0, 67) + "..."
-                          : item.title}
-                      </h3>
-                      <p className="text-sm lg:text-base">{item.summary}</p>
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-600 mt-2 inline-block text-sm"
-                      >
-                        🔗 View Full
-                      </a>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <button
-                    onClick={handleGenerate}
-                    className="btn"
-                    disabled={generateLoading}
-                  >
-                    {generateLoading
-                      ? "Generating..."
-                      : "Generate Newsletter ⭐"}
+                    <FaLaptop />
                   </button>
-
-                  {newsletterHTML && (
-                    <button
-                      className="btn btn-success text-base lg:text-lg"
-                      onClick={() => navigate("/admin/send-mail")}
-                    >
-                      📤 Send Mail
-                    </button>
-                  )}
+                  <button 
+                    onClick={() => setPreviewMode("mobile")}
+                    className={`p-2 rounded-lg transition-all ${previewMode === 'mobile' ? 'bg-primary text-primary-content shadow-md' : 'opacity-40 hover:opacity-100'}`}
+                  >
+                    <FaMobileAlt />
+                  </button>
                 </div>
               </div>
 
-              {newsletterHTML && (
-                <div className="mt-10 bg-base-100 border border-base-300 rounded-xl overflow-hidden shadow">
-                  <h3 className="text-xl lg:text-2xl font-bold px-6 pt-6">
-                    📬 Newsletter Preview
-                  </h3>
+              <div className="bg-base-200 rounded-[2.5rem] p-4 flex justify-center shadow-2xl border border-base-content/5">
+                <div 
+                  className={`transition-all duration-500 bg-white shadow-inner overflow-hidden border-[12px] border-base-300 
+                  ${previewMode === 'desktop' ? 'w-full h-[700px] rounded-[1.5rem]' : 'w-[375px] h-[667px] rounded-[3rem]'}`}
+                >
                   <iframe
                     title="newsletter-preview"
-                    className="w-full h-[700px] mt-4"
+                    className="w-full h-full"
                     srcDoc={newsletterHTML}
-                    sandbox=""
                   />
                 </div>
-              )}
-            </>
+              </div>
+            </div>
           )}
         </div>
       </div>

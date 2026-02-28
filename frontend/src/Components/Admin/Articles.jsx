@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEnvelope } from "react-icons/fa";
-import { FaNewspaper } from "react-icons/fa";
+import { FaEnvelope, FaExternalLinkAlt, FaRegCalendarAlt, FaGlobe } from "react-icons/fa";
+import { FaNewspaper, FaBookOpen} from "react-icons/fa6";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -13,12 +14,10 @@ const Articles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/articles/total-articles"
-        );
+        const res = await axios.get("https://newsmail-2s5a.onrender.com/articles/total-articles");
         setArticles(res.data.data);
       } catch (err) {
-        console.error("Error fetching mails:", err);
+        console.error("Error fetching articles:", err);
       }
     };
     fetchArticles();
@@ -26,242 +25,109 @@ const Articles = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post("https://newsmail-2s5a.onrender.com/admin/admin-logout", { withCredentials: true });
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {
-      console.log(error);
       toast.error("Logout unsuccessful!");
     }
   };
 
-  const SidebarItem = ({ icon, label, route }) => {
-    const isActive = window.location.pathname.includes(route);
-    return (
-      <button
-        onClick={() => navigate(route)}
-        className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
-          isActive ? "bg-base-200 shadow" : "hover:bg-base-100"
-        }`}
-      >
-        {icon}
-        <span className="text-lg">{label}</span>
-      </button>
-    );
-  };
+  const SidebarItem = ({ icon, label, route }) => (
+    <button
+      onClick={() => navigate(route)}
+      className={`flex items-center gap-4 px-4 py-3 rounded-2xl font-bold transition-all duration-300 ${
+        window.location.pathname === route 
+          ? "bg-primary text-primary-content shadow-lg shadow-primary/30" 
+          : "hover:bg-base-200 opacity-70 hover:opacity-100"
+      }`}
+    >
+      {icon} <span className="text-md">{label}</span>
+    </button>
+  );
 
   return (
-    <div className="p-4 md:p-6 mt-14 min-h-screen">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar */}
-        <div className="lg:cols-span-1">
-          <div className="lg:hidden flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold">Menu</h3>
-            <button
-              className="text-2xl font-bold bg-base-200 px-3 py-1 rounded"
-              onClick={() => setShowSidebar((prev) => !prev)}
-            >
-              ☰
-            </button>
+    <div className="min-h-screen bg-base-100 p-4 md:p-8 mt-12">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-8">
+        
+        {/* Sidebar - Consistent with Dashboard */}
+        <aside className="lg:col-span-1 space-y-8">
+          <div className="p-6 bg-primary/10 rounded-[2rem] text-center group">
+            <div className="w-16 h-16 bg-primary rounded-2xl mx-auto mb-4 flex items-center justify-center text-primary-content shadow-lg rotate-3 group-hover:rotate-0 transition-transform">
+              <FaBookOpen size={28} />
+            </div>
+            <h2 className="font-black text-xl italic tracking-tighter">Content Hub</h2>
           </div>
 
-          {showSidebar && (
-            <div className="lg:hidden bg-base-200 p-6 rounded-xl">
-              <div className="flex flex-col items-center mb-6">
-                <img
-                  src="https://t4.ftcdn.net/jpg/02/27/45/09/360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg"
-                  alt="Admin Avatar"
-                  className="w-20 h-20 rounded-full mb-2"
-                />
-                <h1 className="text-lg font-medium text-center mt-2">
-                  Admin 🛡️
+          <nav className="flex flex-col gap-2">
+            <SidebarItem icon={<FaNewspaper />} label="Dashboard" route="/admin-dashboard" />
+            <SidebarItem icon={<FaBookOpen />} label="Articles" route="/admin/articles" />
+            <SidebarItem icon={<FaEnvelope />} label="Send Mail" route="/admin/send-mail" />
+            <SidebarItem icon={<FaGlobe />} label="Scrape" route="/admin/scrape" />
+          </nav>
+        </aside>
+
+        {/* Articles Main Section */}
+        <div className="lg:col-span-4 space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-center bg-base-200 p-8 rounded-[2.5rem] border border-base-content/5 shadow-xl relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-8 opacity-5">
+                <FaBookOpen size={120} />
+             </div>
+             <div className="relative z-10">
+                <h1 className="text-4xl md:text-5xl font-black tracking-tighter italic">
+                  Library <span className="text-primary not-italic text-sm font-medium tracking-wide"> Total Articles : ({articles.length})</span>
                 </h1>
-              </div>
-              {[
-                { label: "Dashboard", path: "/admin-dashboard" },
-                { label: "Articles", path: "/admin/articles" },
-                { label: "News Letter", path: "/admin/newsletter" },
-                { label: "Send Mail", path: "/admin/send-mail" },
-                { label: "Scrape Website", path: "/admin/scrape" },
-              ].map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => navigate(item.path)}
-                  className={`w-full text-left p-3 rounded-xl text-lg font-medium cursor-pointer ${
-                    window.location.pathname.includes(item.path)
-                      ? "bg-base-100"
-                      : "hover:bg-base-300 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-              <button
-                onClick={handleLogout}
-                className="mt-6 text-lg text-red-500 font-semibold hover:text-red-700"
-              >
-                Logout
-              </button>
-            </div>
-          )}
+                <p className="text-xs uppercase font-bold tracking-[0.2em] opacity-40 mt-2">Manage your curated knowledge base</p>
+             </div>
+             <button onClick={() => navigate('/admin/scrape')} className="btn btn-primary rounded-2xl px-8 shadow-lg shadow-primary/20 mt-4 md:mt-0">
+                Scrape More
+             </button>
+          </div>
 
-          <aside className="hidden lg:flex flex-col bg-base-300 rounded-xl py-8 px-6 shadow-md h-full min-h-[calc(100vh-8rem)]">
-            {/* Logo */}
-            <div className="mb-10 flex flex-col gap-4 items-center bg-base-200 px-6 py-4 rounded-xl">
-              <img
-                src="/newsMailer.svg"
-                alt="Admin"
-                className="w-24 h-10 object-contain"
-              />
-              <h3 className="text-center text-2xl font-semibold ">Admin</h3>
-            </div>
-
-            {/* Menu Items */}
-            <nav className="flex flex-col gap-5">
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                }
-                label="Dashboard"
-                route="/admin-dashboard"
-              />
-
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                }
-                label="Articles"
-                route="/admin/articles"
-              />
-              <SidebarItem
-                icon={
-                  <svg
-                    aria-hidden="true"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                }
-                label="NewsLetter"
-                route="/admin/newsLetter"
-              />
-              <SidebarItem
-                icon={<FaEnvelope className="w-6 h-6" />}
-                label="Send Mail"
-                route="/admin/send-mail"
-              />
-              <SidebarItem
-                icon={<FaNewspaper className="w-6 h-6" />}
-                label="Scrape Website"
-                route="/admin/scrape"
-              />
-            </nav>
-
-            {/* Logout */}
-            <button
-              onClick={handleLogout}
-              className="mt-auto flex items-center gap-3 text-red-500 hover:text-red-700 px-4 py-3 hover:bg-base-100 rounded-xl transition-all duration-200"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              <span className="text-lg font-semibold">Logout</span>
-            </button>
-          </aside>
-        </div>
-
-        {/* Articles Section */}
-        <div className="lg:col-span-3 bg-base-200 p-6 md:p-10 rounded-xl shadow-md">
-          <h1 className="lg:text-5xl text-xl font-bold mb-10 text-center text-primary">
-            Articles 📚
-          </h1>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Articles Grid */}
+          <div className="grid md:grid-cols-2 xl:grid-cols-2 gap-6">
             {articles.map((item) => (
               <div
                 key={item._id}
-                className="bg-base-100 p-5 rounded-xl shadow hover:shadow-lg transition duration-300"
+                className="group bg-base-200 p-6 rounded-[2rem] border border-base-content/5 hover:border-primary/40 transition-all duration-300 shadow-xl hover:shadow-primary/5 flex flex-col justify-between"
               >
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3">
-                  {item.title.length > 80
-                    ? item.title.slice(0, 77) + "..."
-                    : item.title}
-                </h3>
-                <p className="text-sm sm:text-base mb-1">
-                  <strong>Source:</strong>{" "}
-                  <a
+                <div>
+                   <div className="flex justify-between items-start mb-4">
+                      <div className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-lg tracking-widest">
+                        {new URL(item.sourceUrl).hostname.replace('www.', '')}
+                      </div>
+                      <span className="flex items-center gap-1 text-[10px] opacity-40 font-bold">
+                        <FaRegCalendarAlt /> {new Date(item.createdAt).toLocaleDateString()}
+                      </span>
+                   </div>
+                   
+                   <h3 className="text-xl font-black mb-3 leading-tight group-hover:text-primary transition-colors">
+                     {item.title.length > 80 ? item.title.slice(0, 77) + "..." : item.title}
+                   </h3>
+                   
+                   <p className="text-sm opacity-60 leading-relaxed font-medium mb-6">
+                     {item.summary.length > 150 ? item.summary.slice(0, 150) + "..." : item.summary}
+                   </p>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-base-content/5 mt-auto">
+                   <a
                     href={item.sourceUrl}
-                    className="hover:underline"
                     target="_blank"
                     rel="noreferrer"
+                    className="flex items-center gap-2 text-xs font-bold opacity-40 hover:opacity-100 transition-opacity"
                   >
-                    {item.sourceUrl}
+                    <FaGlobe /> Source
                   </a>
-                </p>
-                <p className="text-sm sm:text-base mt-3 mb-2">
-                  <strong>Description:</strong>{" "}
-                  {item.summary.length > 100
-                    ? item.summary.slice(0, 100) + "..."
-                    : item.summary}
-                </p>
-                <p className="text-sm sm:text-base mt-2">
-                  <strong>Created:</strong>{" "}
-                  {new Date(item.createdAt).toLocaleString()}
-                </p>
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-block text-blue-600 hover:underline text-sm sm:text-base font-medium"
-                >
-                  🔗 Read full article
-                </a>
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 px-5 py-2 bg-base-100 rounded-xl text-xs font-black shadow-sm group-hover:bg-primary group-hover:text-primary-content transition-all"
+                  >
+                    Read Full <FaExternalLinkAlt size={10} />
+                  </a>
+                </div>
               </div>
             ))}
           </div>

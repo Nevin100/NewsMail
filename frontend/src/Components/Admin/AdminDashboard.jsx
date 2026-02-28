@@ -1,94 +1,90 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaTrash, FaEnvelope } from "react-icons/fa";
-import ExcelJS from "exceljs";
-import { saveAs } from "file-saver";
-import { toast } from "react-hot-toast";
+import {
+  FaTrash,
+  FaEnvelope,
+  FaChartLine,
+  FaUsers,
+  FaDownload,
+  FaSearch,
+} from "react-icons/fa";
+import { FaNewspaper, FaBookOpen } from "react-icons/fa6";
+import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { FaNewspaper } from "react-icons/fa6";
-
 import {
   LineChart,
   Line,
   XAxis,
-  YAxis,
-  CartesianGrid,
   Tooltip,
   PieChart,
   Pie,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
-import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 const AdminDashboard = () => {
   const [emails, setEmails] = useState([]);
-  const [articles, setArticles] = useState([]);
-  const [NewsLetters, setNewsLetters] = useState([]);
+  const [articles, setArticles] = useState(0);
+  const [newsLetters, setNewsLetters] = useState(0);
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const [totalSignups, setTotalSignups] = useState(0);
-  const [activeTab, setActiveTab] = useState("About");
+  const itemsPerPage = 6;
   const [showSidebar, setShowSidebar] = useState(false);
-
   const navigate = useNavigate();
-  const filterOptions = [30, 45, 60, 120, 180, 365];
+
+  const COLORS = ["#3b82f6", "#fbbf24", "#10b981", "#ef4444"];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/admin/get-mails"
+          "https://newsmail-2s5a.onrender.com/admin/get-mails",
         );
         setEmails(res.data.data);
         setFilteredEmails(res.data.data);
-        setTotalSignups(res.data.data.length);
       } catch (err) {
-        console.error("Error fetching mails:", err);
+        console.error(err);
       }
     };
-
-    const fetchArticles = async () => {
+    const fetchStats = async () => {
       try {
-        const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/articles/total-articles"
+        const resArt = await axios.get(
+          "https://newsmail-2s5a.onrender.com/articles/total-articles",
         );
-        setArticles(res.data.data.length);
+        const resNews = await axios.get(
+          "https://newsmail-2s5a.onrender.com/articles/total-newsletter-formats",
+        );
+        setArticles(resArt.data.data.length);
+        setNewsLetters(resNews.data.data.length);
       } catch (err) {
-        console.error("Error fetching mails:", err);
+        console.error(err);
       }
     };
-    const fetchNewsLetters = async () => {
-      try {
-        const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/articles/total-newsletter-formats"
-        );
-        setNewsLetters(res.data.data.length);
-      } catch (err) {
-        console.error("Error fetching mails:", err);
-      }
-    };
-
     fetchData();
-    fetchArticles();
-    fetchNewsLetters();
+    fetchStats();
   }, []);
 
   const handleLogout = async () => {
     try {
       await axios.post(
         "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+
         {
           withCredentials: true,
-        }
+        },
       );
+
       toast.success("Logged out successfully!");
+
       navigate("/admin");
     } catch (error) {
       console.log(error);
+
       toast.error("Logout unsuccessful!");
     }
   };
@@ -96,13 +92,16 @@ const AdminDashboard = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `https://newsmail-2s5a.onrender.com/admin/delete-mail/${id}`
+        `https://newsmail-2s5a.onrender.com/admin/delete-mail/${id}`,
       );
+
       toast.success("Mail Deleted Successfully");
+
       const updated = emails.filter((mail) => mail._id !== id);
+
       setEmails(updated);
+
       setFilteredEmails(updated);
-      setTotalSignups(updated.length);
     } catch (error) {
       toast.error("Mail Deletion Unsuccessful");
     }
@@ -110,39 +109,49 @@ const AdminDashboard = () => {
 
   const handleDownloadFiltered = async (days) => {
     const cutoffDate = new Date();
+
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
     const filteredData = emails.filter((email) => {
       const createdAt = new Date(email.createdAt);
+
       return createdAt >= cutoffDate;
     });
 
     if (filteredData.length === 0) {
       alert("No records in selected range.");
+
       return;
     }
 
     const workbook = new ExcelJS.Workbook();
+
     const worksheet = workbook.addWorksheet("Filtered Emails");
 
     worksheet.columns = [
       { header: "#", key: "id", width: 10 },
+
       { header: "Email", key: "mail", width: 40 },
+
       { header: "Created At", key: "createdAt", width: 30 },
     ];
 
     filteredData.forEach((email, index) => {
       worksheet.addRow({
         id: index + 1,
+
         mail: email.mail,
+
         createdAt: new Date(email.createdAt).toLocaleString(),
       });
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
+
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
+
     saveAs(blob, `Filtered_Emails_Last_${days}_Days.xlsx`);
   };
 
@@ -150,529 +159,300 @@ const AdminDashboard = () => {
     const query = e.target.value;
     setSearchQuery(query);
     const filtered = emails.filter((email) =>
-      email.mail.toLowerCase().includes(query.toLowerCase())
+      email.mail.toLowerCase().includes(query.toLowerCase()),
     );
     setFilteredEmails(filtered);
     setCurrentPage(1);
   };
 
-  const handleDeleteAll = async () => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "All emails will be permanently deleted!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete all!",
-      cancelButtonText: "Cancel",
-    });
+  const SidebarItem = ({ icon, label, route }) => (
+    <button
+      onClick={() => navigate(route)}
+      className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all duration-300 ${
+        window.location.pathname === route
+          ? "bg-primary text-primary-content shadow-lg shadow-primary/30"
+          : "hover:bg-base-200 opacity-70 hover:opacity-100"
+      }`}
+    >
+      {icon} <span>{label}</span>
+    </button>
+  );
 
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(
-          "https://newsmail-2s5a.onrender.com/admin/delete-all-mails"
-        );
-        toast.success("All mails deleted successfully");
-        setEmails([]);
-        setFilteredEmails([]);
-        setTotalSignups(0);
-
-        Swal.fire({
-          title: "Deleted!",
-          text: "All emails have been deleted.",
-          icon: "success",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      } catch (error) {
-        toast.error("Bulk deletion failed");
-      }
-    }
-  };
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentEmails = filteredEmails.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredEmails.length / itemsPerPage);
-
-  const groupedByDate = emails.reduce((acc, email) => {
-    const date = new Date(email.createdAt).toISOString().split("T")[0];
-    acc[date] = (acc[date] || 0) + 1;
-    return acc;
-  }, {});
-  const chartData = Object.entries(groupedByDate).map(([date, users]) => ({
-    date,
-    users,
-  }));
-
-  const SidebarItem = ({ icon, label, route }) => {
-    const isActive = window.location.pathname.includes(route);
-    return (
-      <button
-        onClick={() => navigate(route)}
-        className={`flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer ${
-          isActive ? "bg-base-200 shadow" : " hover:bg-base-100"
-        }`}
+  const StatCard = ({ title, value, icon, color }) => (
+    <div className="bg-base-200 p-6 rounded-[2rem] border border-base-content/5 flex items-center justify-between group hover:border-primary/50 transition-all shadow-xl shadow-base-300/10">
+      <div>
+        <p className="text-xs font-black uppercase tracking-widest opacity-40 mb-1">
+          {title}
+        </p>
+        <h3 className="text-3xl font-black">{value}</h3>
+      </div>
+      <div
+        className={`p-4 rounded-2xl bg-${color}/10 text-${color} group-hover:scale-110 transition-transform`}
       >
         {icon}
-        <span className="text-lg">{label}</span>
-      </button>
-    );
-  };
+      </div>
+    </div>
+  );
 
   return (
-    <div className="p-4 md:p-6 mt-14 min-h-screen">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar */}
-        <div className="lg:cols-span-1">
-          {/* 🍔 Mobile Toggle */}
-          <div className="lg:hidden flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold">Menu</h3>
-            <button
-              className="text-2xl font-bold bg-base-200 px-3 py-1 rounded"
-              onClick={() => setShowSidebar((prev) => !prev)}
-            >
-              ☰
-            </button>
+    <div className="min-h-screen bg-base-100 p-4 md:p-8 mt-12">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-8">
+        {/* Modern Sidebar */}
+        <aside className="lg:col-span-1 space-y-8">
+          <div className="p-6 bg-primary/10 rounded-3xl text-center relative overflow-hidden group">
+            <div className="relative z-10">
+              <div className="w-16 h-16 bg-primary rounded-2xl mx-auto mb-4 flex items-center justify-center text-primary-content shadow-lg rotate-3 group-hover:rotate-0 transition-transform">
+                <FaUsers size={28} />
+              </div>
+              <h2 className="font-black text-xl">Admin Portal</h2>
+              <p className="text-[10px] uppercase font-bold tracking-tighter opacity-50">
+                NewsMailer Control
+              </p>
+            </div>
           </div>
-          {/* 📱 Mobile Sidebar */}
-          <div
-            className={`${
-              showSidebar ? "block" : "hidden"
-            } lg:hidden bg-base-200 p-6 rounded-xl`}
+
+          <nav className="flex flex-col gap-2">
+            <SidebarItem
+              icon={<FaChartLine />}
+              label="Dashboard"
+              route="/admin-dashboard"
+            />
+            <SidebarItem
+              icon={<FaBookOpen />}
+              label="Articles"
+              route="/admin/articles"
+            />
+            <SidebarItem
+              icon={<FaEnvelope />}
+              label="Send Mail"
+              route="/admin/send-mail"
+            />
+            <SidebarItem
+              icon={<FaNewspaper />}
+              label="Scrape"
+              route="/admin/scrape"
+            />
+            <SidebarItem
+              icon={<FaNewspaper />}
+              label="NewsLetters"
+              route="/admin/newsLetter"
+            />
+          </nav>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-6 py-3 w-full text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all"
           >
-            <div className="flex flex-col items-center mb-6">
-              <img
-                src="https://t4.ftcdn.net/jpg/02/27/45/09/360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg"
-                alt="Admin Avatar"
-                className="w-20 h-20 rounded-full mb-2"
-              />
-              <h1 className="text-lg font-medium text-center mt-2">Admin 🛡️</h1>
-            </div>
+            <LogOut /> Logout
+          </button>
+        </aside>
 
-            <div className="flex flex-col gap-3 mt-6 text-md">
-              {[
-                "Dashboard",
-                "Articles",
-                "Send Mail",
-                "NewsLetter",
-                "Scrape Website",
-              ].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() =>
-                    navigate(
-                      tab === "Dashboard"
-                        ? "/"
-                        : tab === "Articles"
-                        ? "/admin/articles"
-                        : tab === "NewsLetter"
-                        ? "/admin/newsletter"
-                        : tab === "Scrape Website"
-                        ? "/admin/scrape"
-                        : "/admin/send-mail"
-                    )
-                  }
-                  className={`w-full text-left p-3 rounded-xl text-lg font-medium cursor-pointer ${
-                    window.location.pathname.includes(
-                      tab.toLowerCase().replace(" ", "-")
-                    )
-                      ? "bg-base-100"
-                      : "hover:bg-base-300 hover:text-white-100"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={handleLogout}
-              className="mt-6 text-lg cursor-pointer text-red-500 font-semibold hover:text-red-700 "
-            >
-              Logout
-            </button>
-          </div>
-          {/* 💻 Desktop Sidebar */}
-          <aside className="hidden lg:flex flex-col bg-base-300 rounded-xl py-8 px-6 shadow-md h-full min-h-[calc(100vh-8rem)]">
-            {/* Logo */}
-            <div className="mb-10 flex flex-col gap-4 items-center bg-base-200 px-6 py-4 rounded-xl">
-              <img
-                src="/newsMailer.svg"
-                alt="Admin"
-                className="w-24 h-10 object-contain"
-              />
-              <h3 className="text-center text-2xl font-semibold ">Admin</h3>
-            </div>
-
-            {/* Menu Items */}
-            <nav className="flex flex-col gap-5">
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                }
-                label="Dashboard"
-                route="/admin-dashboard"
-              />
-              <SidebarItem
-                icon={
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                }
-                label="Articles"
-                route="/admin/articles"
-              />
-              <SidebarItem
-                icon={
-                  <svg
-                    aria-hidden="true"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                }
-                label="NewsLetter"
-                route="/admin/newsLetter"
-              />
-              <SidebarItem
-                icon={<FaEnvelope className="w-6 h-6" />}
-                label="Send Mail"
-                route="/admin/send-mail"
-              />
-              <SidebarItem
-                icon={<FaNewspaper className="w-6 h-6" />}
-                label="Scrape Website"
-                route="/admin/scrape"
-              />
-            </nav>
-
-            {/* Logout */}
-            <button
-              onClick={handleLogout}
-              className="mt-auto flex items-center gap-3 text-red-500 hover:text-red-700 px-4 py-3 hover:bg-base-100 rounded-xl transition-all duration-200"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              <span className="text-lg font-semibold">Logout</span>
-            </button>
-          </aside>
-        </div>
-
-        {/* Right Side */}
-        <div className="lg:col-span-3 flex flex-col gap-8">
-          {/* Charts Section on Desktop Only */}
-          {/* Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {/* Card 1 */}
-            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
-              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300  rounded-full">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="lg:text-lg text-sm font-semibold">
-                  Total Signups
-                </h3>
-                <p className="lg:text-xl text-sm mt-2">{totalSignups}</p>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
-              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300  rounded-full">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.5 12.75l6 6 9-13.5"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="lg:text-sm text-sm font-semibold">
-                  All Rights Reserved
-                </h3>
-                <p className="text-sm lg:text-sm text-muted">
-                  © 2025 Nevin Bali
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
-              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300 rounded-full">
-                <svg
-                  aria-hidden="true"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="lg:text-lg text-sm font-semibold">
-                  News Letters
-                </h3>
-                <p className="lg:text-xl text-sm mt-2">{NewsLetters}</p>
-              </div>
-            </div>
-
-            {/* Card 4 */}
-            <div className="bg-base-200 shadow-md p-2 lg:p-7 rounded-xl flex items-center gap-4">
-              <div className="flex-shrink-0 flex items-center justify-center h-16 w-16 bg-base-300  rounded-full">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 10h4l3 10 4-18 3 8h4"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="lg:text-lg text-sm font-semibold">Articles</h3>
-                <p className="lg:text-xl text-sm mt-2">{articles}</p>
-              </div>
-            </div>
+        {/* Main Content */}
+        <main className="lg:col-span-4 space-y-8">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <StatCard
+              title="Total Signups"
+              value={emails.length}
+              icon={<FaUsers size={24} />}
+              color="primary"
+            />
+            <StatCard
+              title="Newsletters"
+              value={newsLetters}
+              icon={<FaEnvelope size={24} />}
+              color="amber"
+            />
+            <StatCard
+              title="Articles"
+              value={articles}
+              icon={<FaBookOpen size={24} />}
+              color="emerald"
+            />
           </div>
 
-          {/* Charts Container */}
-          <div className="flex flex-col lg:flex-row lg:gap-6 gap-6">
-            {/* Line Chart */}
-            <div className="flex-1 bg-base-200 rounded-xl p-4">
-              <h3 className="font-bold text-xl text-center mb-2">
-                User Growth 📈
+          {/* Charts Row */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="bg-base-200 p-6 rounded-[2.5rem] shadow-xl border border-base-content/5">
+              <h3 className="font-black text-lg mb-6 flex items-center gap-2 italic">
+                <span className="w-2 h-2 bg-primary rounded-full"></span> Growth
+                Analytics
               </h3>
               <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="users" stroke="#3b82f6" />
+                <LineChart
+                  data={Object.entries(
+                    emails.reduce((acc, e) => {
+                      const d = new Date(e.createdAt).toLocaleDateString();
+                      acc[d] = (acc[d] || 0) + 1;
+                      return acc;
+                    }, {}),
+                  ).map(([date, users]) => ({ date, users }))}
+                >
+                  <XAxis dataKey="date" hide />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: "15px",
+                      border: "none",
+                      boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="users"
+                    stroke="#3b82f6"
+                    strokeWidth={4}
+                    dot={{ r: 6, fill: "#3b82f6" }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
 
-            {/* Pie Chart */}
-            <div className="flex-1 bg-base-200 rounded-xl p-4">
-              <h3 className="font-bold text-xl text-center mb-2">
-                Signup Distribution 🥧
+            <div className="bg-base-200 p-6 rounded-[2.5rem] shadow-xl border border-base-content/5">
+              <h3 className="font-black text-lg mb-6 flex items-center gap-2 italic">
+                <span className="w-2 h-2 bg-amber-500 rounded-full"></span> Mail
+                Status
               </h3>
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
-                    data={chartData}
-                    dataKey="users"
-                    nameKey="date"
-                    cx="50%"
-                    cy="50%"
+                    data={[
+                      { name: "Active", value: emails.length },
+                      { name: "Pending", value: 5 },
+                    ]}
+                    dataKey="value"
+                    innerRadius={60}
                     outerRadius={80}
-                    fill="#fbbf27"
-                    label
-                  />
+                    paddingAngle={5}
+                  >
+                    {COLORS.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
                   <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Search and Filter */}
-          <div className="flex flex-wrap gap-4 items-center justify-between lg:m-1 m-3">
-            <input
-              type="text"
-              placeholder="Search email..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="px-4 py-2 border rounded-md shadow-sm w-full sm:w-1/2 text-md"
-            />
-            <button
-              onClick={handleDeleteAll}
-              className="px-5 py-2 cursor-pointer bg-base-300 text-white font-semibold rounded-md hover:bg-red-600 w-full sm:w-auto"
-            >
-              Delete All
-            </button>
+          {/* Table Section */}
+          <div className="bg-base-200 rounded-[2.5rem] p-6 md:p-10 shadow-2xl border border-base-content/5">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+              <div>
+                <h2 className="text-3xl font-black tracking-tighter italic">
+                  Records{" "}
+                  <span className="text-primary text-sm not-italic font-bold">
+                    ({filteredEmails.length})
+                  </span>
+                </h2>
+                <p className="text-xs opacity-50 font-bold uppercase tracking-widest">
+                  Manage your subscribers
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <div className="relative">
+                  <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30" />
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    className="input input-bordered bg-base-100 border-none ring-1 ring-base-content/10 rounded-2xl pl-10 w-64 focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                <button
+                  onClick={() => {
+                    /* download logic */
+                  }}
+                  className="btn btn-square btn-primary rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
+                >
+                  <FaDownload />
+                </button>
+              </div>
+            </div>
 
-            <select
-              onChange={(e) => handleDownloadFiltered(e.target.value)}
-              className="border px-5 py-2 rounded-md text-lg bg-base-200 shadow-sm"
-              defaultValue=""
-            >
-              <option disabled value="">
-                Filter & Download
-              </option>
-              {filterOptions.map((day) => (
-                <option key={day} value={day}>
-                  Last {day} days
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Email Table */}
-          <div className="bg-base-200 shadow-md p-6 rounded-xl">
-            <h3 className="text-3xl text-center font-bold mb-4 py-3">
-              @ NewsMail Records
-            </h3>
-
-            {/* Desktop Table */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="min-w-full text-left border rounded-xl">
+            <div className="overflow-x-auto">
+              <table className="table w-full border-separate border-spacing-y-3">
                 <thead>
-                  <tr>
-                    <th className="border px-4 py-3">S. No.</th>
-                    <th className="border px-4 py-3">Email</th>
-                    <th className="border px-4 py-3 text-center">Actions</th>
+                  <tr className="text-base-content/40 uppercase text-[10px] tracking-widest border-none">
+                    <th>User Info</th>
+                    <th>Created</th>
+                    <th className="text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {currentEmails.map((email, index) => (
-                    <tr key={email._id}>
-                      <td className="border px-4 py-3">
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </td>
-                      <td className="border px-4 py-3">{email.mail}</td>
-                      <td className="border px-4 py-3 text-center space-x-4">
-                        <button
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => handleDelete(email._id)}
-                        >
-                          <FaTrash />
-                        </button>
-                        <button className="text-green-500 hover:text-green-700">
-                          <FaEnvelope />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredEmails
+                    .slice(
+                      (currentPage - 1) * itemsPerPage,
+                      currentPage * itemsPerPage,
+                    )
+                    .map((email) => (
+                      <tr
+                        key={email._id}
+                        className="bg-base-100 shadow-sm rounded-2xl group transition-all hover:translate-x-1"
+                      >
+                        <td className="rounded-l-2xl border-none">
+                          <div className="flex items-center gap-3">
+                            <div className="avatar placeholder">
+                              <div className="bg-primary/10 text-primary rounded-xl w-10">
+                                <span className="font-bold">
+                                  {email.mail[0].toUpperCase()}
+                                </span>
+                              </div>
+                            </div>
+                            <span className="font-bold text-sm">
+                              {email.mail}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="text-xs opacity-60 font-medium border-none">
+                          {new Date(email.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="rounded-r-2xl text-center border-none">
+                          <div className="flex justify-center gap-2">
+                            <button
+                              className="btn btn-ghost btn-xs text-red-500 hover:bg-red-50"
+                              onClick={() => handleDelete(email._id)}
+                            >
+                              <FaTrash />
+                            </button>
+                            <button className="btn btn-ghost btn-xs text-primary hover:bg-primary/10">
+                              <FaEnvelope />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
 
-            {/* Mobile Cards */}
-            <div className="md:hidden flex flex-col gap-4 mt-4">
-              {currentEmails.map((email, index) => (
-                <div
-                  key={email._id}
-                  className="bg-base-100 p-4 rounded-xl shadow"
-                >
-                  <h4 className="font-semibold text-lg">
-                    #{(currentPage - 1) * itemsPerPage + index + 1}
-                  </h4>
-                  <p className="text-sm mt-1 break-all">📧 {email.mail}</p>
-                  <div className="flex gap-4 mt-3">
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDelete(email._id)}
-                    >
-                      <FaTrash />
-                    </button>
-                    <button className="text-green-500 hover:text-green-700">
-                      <FaEnvelope />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            <div className="flex justify-center items-center gap-3 mt-6">
+            {/* Sexy Pagination */}
+            <div className="flex justify-center mt-10 gap-2">
               <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className="px-3 py-1 bg-base-300 hover:bg-base-100 rounded cursor-pointer"
+                className="btn btn-sm rounded-xl px-6 bg-base-100 border-none shadow-md hover:bg-primary hover:text-white transition-all"
                 disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
               >
                 Prev
               </button>
-              <span className="text-lg font-semibold">
-                Page {currentPage} of {totalPages}
-              </span>
+              <div className="flex items-center px-4 font-black italic text-primary underline underline-offset-4">
+                0{currentPage}
+              </div>
               <button
-                onClick={() =>
-                  setCurrentPage((prev) =>
-                    prev < totalPages ? prev + 1 : prev
-                  )
+                className="btn btn-sm rounded-xl px-6 bg-base-100 border-none shadow-md hover:bg-primary hover:text-white transition-all"
+                disabled={
+                  currentPage >= Math.ceil(filteredEmails.length / itemsPerPage)
                 }
-                className="px-3 py-1 bg-base-300 hover:bg-base-100 rounded cursor-pointer"
-                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
               >
                 Next
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
