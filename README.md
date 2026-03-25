@@ -24,8 +24,6 @@
 - ✉️ **Resend Email Sending** setup for sending rich emails
 - 🧹 **Web Scraping** via Cheerio + Axios for newsletter content sourcing --> currently scrape some websites as it is alpha model**
 - 🚀 **Bulk Mailer**  is working ✅
-
-``` This is an alpha model 😄```
 ---
 
 ## 🚀 Tech Stack
