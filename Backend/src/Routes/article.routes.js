@@ -1,4 +1,3 @@
-// routes/article.routes.js
 import express from "express";
 import scrapeTechNews from "../Lib/scrape.js";
 import Article from "../Model/article.model.js";
@@ -60,13 +59,11 @@ router.get("/total-newsletter-formats", async (req, res) => {
         .status(400)
         .json({ message: "No NewsLetters found", error: true });
     }
-    res
-      .status(200)
-      .json({
-        message: "Newsletters recieved",
-        data: newsLetters,
-        error: false,
-      });
+    res.status(200).json({
+      message: "Newsletters recieved",
+      data: newsLetters,
+      error: false,
+    });
   } catch (error) {
     console.error("Error Occured:", error.message);
     res.status(500).json({ error: true, message: "internal Server Issue" });

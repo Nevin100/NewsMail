@@ -20,35 +20,35 @@ const PORT = process.env.PORT;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_MODEL = "llama-3.1-8b-instant";
 
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://news-mail.vercel.app", "https://newsmail.nevinbali.me" ],
+    origin: [
+      "http://localhost:5173",
+      "https://news-mail.vercel.app",
+      "https://newsmail.nevinbali.me",
+    ],
     credentials: true,
-  })
+  }),
 );
 app.use(cookieParser());
 
 // Send Newsletter Function :
 export const sendNewsLetter = async (to, subject, html, bcc = []) => {
-  if (!to && (!bcc || bcc.length === 0)) {
-    throw new Error("No recipients provided");
-  }
-
-  if (!html || html.trim() === "") {
-    throw new Error("HTML content is empty");
-  }
-
   const result = await resend.emails.send({
     from: "NewsMail <newsletter@nevinbali.me>",
-    to: to ? [to] : undefined,
+    to: to ? [to] : ["newsletter@nevinbali.me"],
     bcc: bcc && bcc.length > 0 ? bcc : undefined,
     subject,
     html,
   });
+
+  if (result.error) {
+    console.error("Resend error:", result.error);
+    throw new Error(result.error.message);
+  }
 
   console.log("RESEND RESULT:", result);
   return result;
@@ -79,7 +79,7 @@ const callGroqForHTML = async (prompt) => {
         temperature: 0.4,
         max_tokens: 2000,
       }),
-    }
+    },
   );
 
   if (!response.ok) {
@@ -117,9 +117,7 @@ app.post("/admin/generate-newsletter", async (req, res) => {
 
     const rawHtml = await callGroqForHTML(prompt);
 
-    const cleanHtml = rawHtml
-      .replace(/```html|```/gi, "")
-      .trim();
+    const cleanHtml = rawHtml.replace(/```html|```/gi, "").trim();
 
     if (!cleanHtml) {
       return res
