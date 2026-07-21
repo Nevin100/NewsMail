@@ -7,9 +7,9 @@
 ---
 ## ✨ Project Overview
 
-**Newsmail** is a production-ready full-stack Newsletter application built using the **MERN** stack (MongoDB, Express, React, Node). Designed with a clean, modern UI powered by **DaisyUI’s 34 sleek themes**, Newsmail lets users collect emails, manage campaigns, and send personalized newsletters — enhanced with **AI-generated content** via the **Gemini API**.
+**Newsmail** is a production-ready full-stack Newsletter application built using the **MERN** stack (MongoDB, Express, React, Node). Designed with a clean, modern UI powered by **DaisyUI’s 34 sleek themes**, Newsmail lets users collect emails, manage campaigns, and send personalized newsletters — enhanced with **AI-generated content** via the **Groq API**.
 
-> Now includes a fully functional **Admin Dashboard**, **Bulk Mailer** support and robust **Nodemailer** integration.
+> Now includes a fully functional **Admin Dashboard**, **Bulk Mailer** support and robust **Nodemailer** / **Resend API** integration.
 
 ---
 
@@ -17,7 +17,7 @@
 
 - 🔹 **Responsive Newsletter Landing Page**
 - 🎨 Styled with **TailwindCSS** + **DaisyUI (34+ themes)**
-- 🧠 **Gemini API** integration for AI-generated HTML newsletter content  
+- 🧠 **Groq API** integration for AI-generated HTML newsletter content  
 - 📁 **Excel Parsing** (using `exceljs`) to upload recipient lists
 - 🔐 **Admin Authentication** system
 - 📊 **Admin Dashboard** for creating and managing campaigns
