@@ -1,4 +1,4 @@
-# 📰 @Newsmail - Web Scraping + AI + NodeMailer + Admin Dashboard 
+# 📰 @Newsmail - Web Scraping + AI + Resend API + Admin Dashboard 
 
 > ✅ **COMPLETED & FUNCTIONAL**  
 > _A powerful MERN stack-based Newsletter Platform – AI-powered, admin-controlled, and built for bulk mail efficiency._
