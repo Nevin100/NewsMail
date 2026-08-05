@@ -101,6 +101,23 @@ app.get("/", async (req, res) => {
   res.send("Hello From the backend");
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// Self-ping every 10 minutes
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+
+setInterval(async () => {
+  try {
+    await fetch(`${SELF_URL}/health`);
+    console.log("Self-ping successful");
+  } catch (err) {
+    console.error("Self-ping failed:", err.message);
+  }
+}, 10 * 60 * 1000);
+
 //AI Routes :
 app.post("/admin/generate-newsletter", async (req, res) => {
   let lastGeneratedHtml = "";
