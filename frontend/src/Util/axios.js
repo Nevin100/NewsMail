@@ -1,4 +1,4 @@
-import { BASEURL } from "./BaseUrl.js";
+import BASEURL from "./BaseUrl.js";
 import axios from "axios";
 
 const instance = axios.create({
