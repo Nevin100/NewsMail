@@ -1,5 +1,5 @@
 services:
-  Backend:
+  backend:
     build: ./Backend
     ports:
       - "8000:8000"
@@ -8,7 +8,7 @@ services:
     environment:
       - NODE_ENV=production
 
-  Frontend:
+  frontend:
     build:
       context: ./Frontend
       args:
