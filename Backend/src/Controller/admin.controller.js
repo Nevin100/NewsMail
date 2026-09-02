@@ -1,9 +1,45 @@
 import Admin from "../Model/admin.model.js";
 import generateToken from "../Lib/generateToken.js";
 import Mail from "../Model/mail.model.js";
+import bcrypt from "bcryptjs";
+import {body,validationResult} from "express-validator";
 
+// Temporary Controller : (Register Login - Later removed)
+export const registerAdmin = async(req, res) => {
+  try{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
+
+    const {email, password} = req.body;
+    
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
+    const newAdmin = new Admin({
+      email,
+      password: hashedPassword
+    });
+
+    await newAdmin.save();
+
+    res.status(201).json({message:"Admin created successfully", error: false, success: true});
+    return;
+  }catch(error){
+    res.status(500).json({message:"Internal Server Issue", error: true, success: false });
+    return;
+  }
+}
+
+// Login Controller : 
 export const adminLogin = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+     }
+    
     const { email, password } = req.body;
     if (!email || !password) {
       return res
@@ -11,19 +47,23 @@ export const adminLogin = async (req, res) => {
         .json({ message: "Fields cant be empty", error: true });
     }
 
-    const isAdmin = await Admin.findOne({ email: email });
+    if (typeof email !== "string" || typeof password !== "string") {
+      return res.status(400).json({ message: "Invalid input", error: true });
+    }
+    const emailModified = email.toLowerCase();
+    const isAdmin = await Admin.findOne({ email: String(emailModified) });
     if (!isAdmin) {
       return res.status(403).json({ message: "No Admin matched" });
     }
 
-    const isPassword = isAdmin.password == password;
-    if (!isPassword) {
+    const isPasswordMatched = await bcrypt.compare(password, isAdmin.password);
+    if (!isPasswordMatched) {
       return res
         .status(400)
         .json({ message: "Password Incorrect", error: true });
     }
 
-    if (isPassword && isAdmin) {
+    if (isPasswordMatched && isAdmin) {
       const token = generateToken(isAdmin._id, res);
 
       res.status(200).json({
