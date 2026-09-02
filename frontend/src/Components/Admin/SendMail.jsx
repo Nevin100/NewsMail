@@ -12,6 +12,7 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import { FaNewspaper, FaBookOpen } from "react-icons/fa6";
+import instance from "../../Util/axios.js";
 
 const SendMail = () => {
   const [emails, setEmails] = useState([]);
@@ -24,8 +25,8 @@ const SendMail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/admin/get-mails",
+        const res = await instance.get(
+          "/admin/get-mails",
         );
         const sortedData = res.data.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt),

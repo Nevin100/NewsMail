@@ -25,6 +25,7 @@ import {
 import toast from "react-hot-toast";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
+import instance from "../../Util/axios.js";
 
 const AdminDashboard = () => {
   const [emails, setEmails] = useState([]);
@@ -42,8 +43,8 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          "https://newsmail-2s5a.onrender.com/admin/get-mails",
+        const res = await instance.get(
+          "/admin/get-mails",
         );
         setEmails(res.data.data);
         setFilteredEmails(res.data.data);
@@ -53,11 +54,11 @@ const AdminDashboard = () => {
     };
     const fetchStats = async () => {
       try {
-        const resArt = await axios.get(
-          "https://newsmail-2s5a.onrender.com/articles/total-articles",
+        const resArt = await instance.get(
+          "/articles/total-articles",
         );
-        const resNews = await axios.get(
-          "https://newsmail-2s5a.onrender.com/articles/total-newsletter-formats",
+        const resNews = await instance.get(
+          "/articles/total-newsletter-formats",
         );
         setArticles(resArt.data.data.length);
         setNewsLetters(resNews.data.data.length);
@@ -71,8 +72,8 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "https://newsmail-2s5a.onrender.com/admin/admin-logout",
+      await instance.post(
+        "/admin/admin-logout",
 
         {
           withCredentials: true,
@@ -91,8 +92,8 @@ const AdminDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(
-        `https://newsmail-2s5a.onrender.com/admin/delete-mail/${id}`,
+      await instance.delete(
+        `/admin/delete-mail/${id}`,
       );
 
       toast.success("Mail Deleted Successfully");

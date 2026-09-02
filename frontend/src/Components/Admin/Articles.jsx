@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaExternalLinkAlt, FaRegCalendarAlt, FaGlobe } from "react-icons/fa";
 import { FaNewspaper, FaBookOpen} from "react-icons/fa6";
 import toast from "react-hot-toast";
-import axios from "axios";
+import instance from "../../Util/axios.js";
 
 const Articles = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -14,7 +14,7 @@ const Articles = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get("https://newsmail-2s5a.onrender.com/articles/total-articles");
+        const res = await instance.get("/articles/total-articles");
         setArticles(res.data.data);
       } catch (err) {
         console.error("Error fetching articles:", err);
@@ -25,7 +25,7 @@ const Articles = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://newsmail-2s5a.onrender.com/admin/admin-logout", { withCredentials: true });
+      await instance.post("/admin/admin-logout", { withCredentials: true });
       toast.success("Logged out successfully!");
       navigate("/admin");
     } catch (error) {

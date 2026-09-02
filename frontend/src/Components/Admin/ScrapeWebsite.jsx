@@ -13,6 +13,7 @@ import {
 import { FaNewspaper, FaBookOpen, FaChevronRight } from "react-icons/fa6";
 import toast from "react-hot-toast";
 import axios from "axios";
+import instance from "../../Util/axios.js";
 
 const ScrapWebsite = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -41,8 +42,8 @@ const ScrapWebsite = () => {
     setScrapeLoading(true);
     const loadingToast = toast.loading("Scraping knowledge from the web...");
     try {
-      const res = await axios.post(
-        "https://newsmail-2s5a.onrender.com/articles/scrape",
+      const res = await instance.post(
+        "/articles/scrape",
         { url },
       );
       setArticles(res.data.data || []);
@@ -58,8 +59,8 @@ const ScrapWebsite = () => {
     setGenerateLoading(true);
     const genToast = toast.loading("AI is crafting your newsletter...");
     try {
-      const res = await axios.post(
-        "https://newsmail-2s5a.onrender.com/admin/generate-newsletter",
+      const res = await instance.post(
+        "/admin/generate-newsletter",
         {},
         { timeout: 60000 },
       );

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaHistory, FaEye, FaCalendarAlt, FaGlobe } from "react-icons/fa";
 import { FaNewspaper, FaBookOpen } from "react-icons/fa6";
-import axios from "axios";
 import RenderNewsletter from "../RenderNewsletter.jsx";
+import instance from "../../Util/axios.js"
 
 const NewsLetter = () => {
   const [newsLetters, setNewsLetters] = useState([]);
@@ -12,7 +12,7 @@ const NewsLetter = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get("https://newsmail-2s5a.onrender.com/articles/total-newsletter-formats");
+        const res = await instance.get("/articles/total-newsletter-formats");
         setNewsLetters(res.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } catch (err) {
         console.error("Error fetching newsletters:", err);

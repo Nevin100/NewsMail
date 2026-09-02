@@ -20,7 +20,7 @@ const AdminLogin = () => {
     setIsSubmitting(true);
     try {
       await instance.post(
-        "https://newsmail-2s5a.onrender.com/admin/admin-login",
+        `/admin/admin-login`,
         formData
       );
       toast.success("Welcome back, Commander! 🫡");
