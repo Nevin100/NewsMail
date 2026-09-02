@@ -5,32 +5,32 @@ import bcrypt from "bcryptjs";
 import {body,validationResult} from "express-validator";
 
 // Temporary Controller : (Register Login - Later removed)
-export const registerAdmin = async(req, res) => {
-  try{
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
-    }
+// export const registerAdmin = async(req, res) => {
+//   try{
+//     const errors = validationResult(req);
+//     if(!errors.isEmpty()){
+//         return res.status(400).json({errors: errors.array()});
+//     }
 
-    const {email, password} = req.body;
+//     const {email, password} = req.body;
     
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash(password, salt);
+//     const salt = await bcrypt.genSalt(12);
+//     const hashedPassword = await bcrypt.hash(password, salt);
     
-    const newAdmin = new Admin({
-      email,
-      password: hashedPassword
-    });
+//     const newAdmin = new Admin({
+//       email,
+//       password: hashedPassword
+//     });
 
-    await newAdmin.save();
+//     await newAdmin.save();
 
-    res.status(201).json({message:"Admin created successfully", error: false, success: true});
-    return;
-  }catch(error){
-    res.status(500).json({message:"Internal Server Issue", error: true, success: false });
-    return;
-  }
-}
+//     res.status(201).json({message:"Admin created successfully", error: false, success: true});
+//     return;
+//   }catch(error){
+//     res.status(500).json({message:"Internal Server Issue", error: true, success: false });
+//     return;
+//   }
+// }
 
 // Login Controller : 
 export const adminLogin = async (req, res) => {

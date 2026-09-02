@@ -5,16 +5,16 @@ import {
   deleteMail,
   DeleteMails,
   GetMails,
-  registerAdmin,
 } from "../Controller/admin.controller.js";
 import verifyToken from "../Middleware/verifyToken.js";
 import validate from "../Middleware/validateBody.js";
+import { authLimiter } from "../Middleware/rateLimiter.js";
 
 const router = express.Router();
 
-router.post("/admin-register", validate, registerAdmin);
+// router.post("/admin-register", validate, registerAdmin);
 
-router.post("/admin-login", validate, adminLogin);
+router.post("/admin-login", validate, authLimiter, adminLogin);
 
 router.post("/admin-logout", AdminLogout);
 

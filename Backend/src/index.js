@@ -11,6 +11,7 @@ import generateNewsletterHTML from "./Lib/generateNewsletter.js";
 import NewsLetter from "./Model/newsLetter.model.js";
 import Article from "./Model/article.model.js";
 import { Resend } from "resend";
+import { apiLimiter } from "./Middleware/rateLimiter.js";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use(
   }),
 );
 app.use(cookieParser());
+app.use(apiLimiter)
 
 // Send Newsletter Function :
 export const sendNewsLetter = async (to, subject, html, bcc = []) => {
