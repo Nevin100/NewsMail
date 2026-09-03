@@ -42,7 +42,7 @@ jobs:
         run: |
           docker build \
             --build-arg VITE_API_URL=http://newsmail-alb-1784157618.eu-north-1.elb.amazonaws.com:8000 \
-            -t $ECR_REGISTRY/newsmail-frontend:latest ./Frontend
+            -t $ECR_REGISTRY/newsmail-frontend:latest ./frontend
           docker push $ECR_REGISTRY/newsmail-frontend:latest
 
       # Step 6: ECS Backend service update
