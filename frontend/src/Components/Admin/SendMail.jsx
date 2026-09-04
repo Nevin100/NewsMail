@@ -25,9 +25,7 @@ const SendMail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await instance.get(
-          "/admin/get-mails",
-        );
+        const res = await instance.get("/admin/get-mails");
         const sortedData = res.data.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         );
@@ -47,8 +45,8 @@ const SendMail = () => {
       `Dispatching to ${selectedEmails.length} souls...`,
     );
     try {
-      await axios.post(
-        "https://newsmail-2s5a.onrender.com/admin/send-newsletter",
+      await instance.post(
+        "/admin/send-newsletter",
         {
           bcc: selectedEmails,
           subject: "Your Daily Dose of NewsMail ",
@@ -59,6 +57,38 @@ const SendMail = () => {
       setSelectedEmails([]);
     } catch (error) {
       toast.error("Launch failed.", { id: mailToast });
+    }
+  };
+
+  const handleSingleSend = async (mail) => {
+    const mailToast = toast.loading(`Sending to ${mail}...`);
+    try {
+      await instance.post(
+        "/admin/send-newsletter",
+        {
+          bcc: [mail],
+          subject: "Your Daily Dose of NewsMail",
+        },
+        { withCredentials: true },
+      );
+      toast.success("Mail sent!", { id: mailToast });
+    } catch (error) {
+      toast.error("Send failed!", { id: mailToast });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await instance.delete(`/admin/delete-mail/${id}`);
+      toast.success("Subscriber removed!");
+      const updated = emails.filter((mail) => mail._id !== id);
+      setEmails(updated);
+      setFilteredEmails(updated);
+      setSelectedEmails((prev) =>
+        prev.filter((e) => e !== emails.find((m) => m._id === id)?.mail),
+      );
+    } catch (error) {
+      toast.error("Deletion failed!");
     }
   };
 
@@ -181,17 +211,13 @@ const SendMail = () => {
                       <td className="rounded-r-2xl text-center border-none">
                         <div className="flex justify-center gap-2">
                           <button
-                            onClick={() => {
-                              /* single send */
-                            }}
+                            onClick={() => handleSingleSend(email.mail)}
                             className="btn btn-ghost btn-sm text-primary hover:bg-primary/10 rounded-xl"
                           >
                             <FaEnvelope />
                           </button>
                           <button
-                            onClick={() => {
-                              /* delete */
-                            }}
+                            onClick={() => handleDelete(email._id)}
                             className="btn btn-ghost btn-sm text-red-500 hover:bg-red-50 rounded-xl"
                           >
                             <FaTrash />

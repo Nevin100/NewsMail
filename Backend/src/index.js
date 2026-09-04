@@ -19,7 +19,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_MODEL = "llama-3.1-8b-instant";
+const GROQ_MODEL = "openai/gpt-oss-120b";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -121,7 +121,7 @@ setInterval(async () => {
 }, 10 * 60 * 1000);
 
 //AI Routes :
-app.post("/admin/generate-newsletter", async (req, res) => {
+app.post("/api/admin/generate-newsletter", async (req, res) => {
   let lastGeneratedHtml = "";
   try {
     const articles = await Article.find().sort({ createdAt: -1 }).limit(5);
@@ -160,7 +160,7 @@ app.post("/admin/generate-newsletter", async (req, res) => {
 });
 
 //NewsLetter Route :
-app.post("/admin/send-newsletter", verifyToken, async (req, res) => {
+app.post("/api/admin/send-newsletter", verifyToken, async (req, res) => {
   const { to, bcc, subject, html } = req.body;
 
   if ((!to && (!bcc || bcc.length === 0)) || !subject) {

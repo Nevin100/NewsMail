@@ -79,9 +79,6 @@ const Articles = () => {
                 </h1>
                 <p className="text-xs uppercase font-bold tracking-[0.2em] opacity-40 mt-2">Manage your curated knowledge base</p>
              </div>
-             <button onClick={() => navigate('/admin/scrape')} className="btn btn-primary rounded-2xl px-8 shadow-lg shadow-primary/20 mt-4 md:mt-0">
-                Scrape More
-             </button>
           </div>
 
           {/* Articles Grid */}
