@@ -3,18 +3,16 @@ name: Deploy to ECS
 on:
   push:
     branches:
-      - main # Only works for te main branch push
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Code checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: AWS credentials configure
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -22,30 +20,32 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-north-1
 
-      # Step 3: ECR login
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 4: Backend image build and push
       - name: Build and push backend
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/newsmail-backend:latest ./Backend
+          docker build -t $ECR_REGISTRY/newsmail-backend:$IMAGE_TAG \
+                       -t $ECR_REGISTRY/newsmail-backend:latest ./Backend
+          docker push $ECR_REGISTRY/newsmail-backend:$IMAGE_TAG
           docker push $ECR_REGISTRY/newsmail-backend:latest
 
-      # Step 5: Frontend image build and push
       - name: Build and push frontend
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
             --build-arg VITE_API_URL=https://newsmail.nevinbali.me/api \
+            -t $ECR_REGISTRY/newsmail-frontend:$IMAGE_TAG \
             -t $ECR_REGISTRY/newsmail-frontend:latest ./frontend
+          docker push $ECR_REGISTRY/newsmail-frontend:$IMAGE_TAG
           docker push $ECR_REGISTRY/newsmail-frontend:latest
 
-      # Step 6: ECS Backend service update
       - name: Deploy backend to ECS
         run: |
           aws ecs update-service \
@@ -53,7 +53,6 @@ jobs:
             --service newsmail-backend-service \
             --force-new-deployment
 
-      # Step 7: ECS Frontend service update
       - name: Deploy frontend to ECS
         run: |
           aws ecs update-service \
