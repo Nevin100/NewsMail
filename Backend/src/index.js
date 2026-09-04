@@ -95,16 +95,16 @@ const callGroqForHTML = async (prompt) => {
 };
 
 //Routes :
-app.use("/news-mail", MailRoute);
-app.use("/admin", AdminRoutes);
-app.use("/articles", ArticleRoutes);
+app.use("/api/news-mail", MailRoute);
+app.use("/api/admin", AdminRoutes);
+app.use("/api/articles", ArticleRoutes);
 
 app.get("/", async (req, res) => {
   res.send("Hello From the backend");
 });
 
 // Health check endpoint
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
