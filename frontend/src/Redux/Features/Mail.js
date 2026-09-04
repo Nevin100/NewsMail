@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const baseUrl = import.meta.env.VITE_APP_URI || "";
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: `https://newsmail-2s5a.onrender.com/news-mail`,
+  baseUrl: `${baseUrl}/news-mail`,
   credentials: "include",
 });
 

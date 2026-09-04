@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   FaTrash,
   FaEnvelope,
@@ -43,9 +42,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await instance.get(
-          "/admin/get-mails",
-        );
+        const res = await instance.get("/admin/get-mails");
         setEmails(res.data.data);
         setFilteredEmails(res.data.data);
       } catch (err) {
@@ -54,9 +51,7 @@ const AdminDashboard = () => {
     };
     const fetchStats = async () => {
       try {
-        const resArt = await instance.get(
-          "/articles/total-articles",
-        );
+        const resArt = await instance.get("/articles/total-articles");
         const resNews = await instance.get(
           "/articles/total-newsletter-formats",
         );
@@ -92,9 +87,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await instance.delete(
-        `/admin/delete-mail/${id}`,
-      );
+      await instance.delete(`/admin/delete-mail/${id}`);
 
       toast.success("Mail Deleted Successfully");
 
@@ -364,9 +357,7 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <button
-                  onClick={() => {
-                    /* download logic */
-                  }}
+                  onClick={() => handleDownloadFiltered(30)}
                   className="btn btn-square btn-primary rounded-2xl shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
                 >
                   <FaDownload />
@@ -419,9 +410,7 @@ const AdminDashboard = () => {
                             >
                               <FaTrash />
                             </button>
-                            <button className="btn btn-ghost btn-xs text-primary hover:bg-primary/10">
-                              <FaEnvelope />
-                            </button>
+                          
                           </div>
                         </td>
                       </tr>

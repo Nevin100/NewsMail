@@ -12,7 +12,6 @@ import {
 } from "react-icons/fa";
 import { FaNewspaper, FaBookOpen, FaChevronRight } from "react-icons/fa6";
 import toast from "react-hot-toast";
-import axios from "axios";
 import instance from "../../Util/axios.js";
 
 const ScrapWebsite = () => {
