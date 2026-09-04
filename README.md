@@ -4,6 +4,10 @@ NewsMail is a full-stack newsletter platform for collecting subscribers, sourcin
 
 The project runs as two Dockerized services: a React/Vite frontend served by Nginx and an Express/MongoDB API. The production deployment uses AWS container infrastructure and a custom domain.
 
+<br/>
+
+<img width="1357" height="605" alt="image" src="https://github.com/user-attachments/assets/9e87aac3-7122-41cd-bfb6-c478efefd05b" />
+
 ## What it does
 
 - Lets visitors subscribe to the newsletter and sends a welcome email through Resend.
